@@ -1,10 +1,11 @@
 package de.ihmels.maze.solver
 
-import de.ihmels.maze.Location
 import de.ihmels.maze.Maze
+import de.ihmels.maze.Point2D
+import de.ihmels.maze.graph.TreeNode
 
 interface IMazeSolver {
 
-    fun solve(maze: Maze): Node<Location>?
+    fun solve(maze: Maze): TreeNode<Point2D>?
 
 }

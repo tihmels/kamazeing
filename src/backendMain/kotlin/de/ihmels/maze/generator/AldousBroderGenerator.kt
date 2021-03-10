@@ -20,7 +20,7 @@ class AldousBroderGenerator : IMazeGenerator {
 
             if (neighborLocation in maze) {
 
-                val neighborCell = maze[neighborLocation]
+                val neighborCell = maze.getCell(neighborLocation)
 
                 if (neighborCell !in visitedCells) {
 

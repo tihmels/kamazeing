@@ -2,22 +2,23 @@ package de.ihmels.maze
 
 import com.google.common.collect.ImmutableList
 import de.ihmels.maze.generator.AldousBroderGenerator
+import de.ihmels.maze.generator.SidewinderGenerator
+import de.ihmels.maze.graph.toList
 import de.ihmels.maze.solver.DepthFirstSolver
-import de.ihmels.maze.solver.toList
 
-val topLeft = { _: Maze -> Location(0, 0) }
-val topRight = { maze: Maze -> Location(0, maze.columns - 1) }
-val bottomLeft = { maze: Maze -> Location(maze.rows - 1, 0) }
-val bottomRight = { maze: Maze -> Location(maze.rows - 1, maze.columns - 1) }
+val topLeft = { _: Maze -> Point2D(0, 0) }
+val topRight = { maze: Maze -> Point2D(0, maze.columns - 1) }
+val bottomLeft = { maze: Maze -> Point2D(maze.rows - 1, 0) }
+val bottomRight = { maze: Maze -> Point2D(maze.rows - 1, maze.columns - 1) }
 
 class Maze(
     val rows: Int,
     val columns: Int,
-    startInitializer: (maze: Maze) -> Location = topLeft,
-    destinationInitializer: (maze: Maze) -> Location = bottomRight
+    startInitializer: (maze: Maze) -> Point2D = topLeft,
+    destinationInitializer: (maze: Maze) -> Point2D = bottomRight
 ) : Iterable<Cell> {
 
-    val grid = List(rows) { r -> List(columns) { c -> Cell(r, c) } }
+    val grid = List(rows) { row -> List(columns) { column -> Cell(row, column) } }
 
     val start = startInitializer(this)
     private val destination = destinationInitializer(this)
@@ -28,21 +29,21 @@ class Maze(
     val cells
         get() = grid.flatten()
 
-    fun successors(location: Location): List<Location> {
-        val cell = this[location]
+    fun successors(point: Point2D): List<Point2D> {
+        val cell = getCell(point)
 
         return Direction.values().asList().stream()
             .filter { !cell.hasWallInDirection(it) }
-            .map(location::moveTo)
+            .map(point::moveTo)
             .filter(this::contains)
             .collect(ImmutableList.toImmutableList())
     }
 
-    fun isDestination(location: Location) = location == destination
+    fun isDestination(point: Point2D) = point == destination
 
-    operator fun get(location: Location): Cell = grid[location.row][location.column]
+    fun getCell(point: Point2D): Cell = grid[point.row][point.column]
 
-    operator fun contains(l: Location) = l.row >= 0 && l.column >= 0 && l.row < rows && l.column < columns
+    operator fun contains(l: Point2D) = l.row >= 0 && l.column >= 0 && l.row < rows && l.column < columns
 
     override fun iterator(): Iterator<Cell> {
         return GridIterator(grid)
@@ -83,7 +84,7 @@ class Maze(
         return stringBuilder.toString()
     }
 
-    fun printSolution(path: List<Location>): String {
+    fun printSolution(path: List<Point2D>): String {
         val stringBuilder = StringBuilder()
 
         stringBuilder.append("+")
@@ -120,7 +121,7 @@ class Maze(
 fun main() {
 
     val maze = Maze(5, 5, topLeft)
-    val generator = AldousBroderGenerator()
+    val generator = SidewinderGenerator()
 
     generator.generate(maze)
     println(maze.toString())

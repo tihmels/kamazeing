@@ -29,13 +29,13 @@ class SidewinderGenerator : IMazeGenerator {
                     val northLocation = randomCell moveTo NORTH
 
                     if (northLocation in maze) {
-                        val northCell = maze[northLocation]
+                        val northCell = maze.getCell(northLocation)
                         randomCell.connect(northCell)
                         run.clear()
                     }
 
                 } else {
-                    val eastCell = maze[cell moveTo EAST]
+                    val eastCell = maze.getCell(cell moveTo EAST)
                     cell.connect(eastCell)
                 }
 

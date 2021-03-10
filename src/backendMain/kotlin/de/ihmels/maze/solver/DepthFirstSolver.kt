@@ -1,19 +1,20 @@
 package de.ihmels.maze.solver
 
-import de.ihmels.maze.Location
 import de.ihmels.maze.Maze
+import de.ihmels.maze.Point2D
+import de.ihmels.maze.graph.TreeNode
 import java.util.*
 
 class DepthFirstSolver : IMazeSolver {
 
-    override fun solve(maze: Maze): Node<Location>? {
+    override fun solve(maze: Maze): TreeNode<Point2D>? {
         return dfs(maze.start, maze::isDestination, maze::successors)
     }
 
-    private fun <T> dfs(initial: T, exitPredicate: (T) -> Boolean, successors: (T) -> List<T>): Node<T>? {
+    private fun <T> dfs(initial: T, exitPredicate: (T) -> Boolean, successors: (T) -> List<T>): TreeNode<T>? {
 
-        val frontier: Stack<Node<T>> = Stack()
-        frontier.push(Node(initial, null))
+        val frontier: Stack<TreeNode<T>> = Stack()
+        frontier.push(TreeNode(initial))
 
         val explored = mutableSetOf<T>()
         explored.add(initial)
@@ -21,7 +22,7 @@ class DepthFirstSolver : IMazeSolver {
         while (frontier.isNotEmpty()) {
 
             val currentNode = frontier.pop()
-            val currentState = currentNode.state
+            val currentState = currentNode.value
 
             if (exitPredicate(currentState)) {
                 return currentNode
@@ -34,7 +35,7 @@ class DepthFirstSolver : IMazeSolver {
                 }
 
                 explored.add(child)
-                frontier.push(Node(child, currentNode))
+                frontier.push(TreeNode(child, currentNode))
             }
         }
 

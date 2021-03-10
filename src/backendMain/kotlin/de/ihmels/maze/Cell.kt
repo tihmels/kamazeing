@@ -1,6 +1,6 @@
 package de.ihmels.maze
 
-class Cell(row: Int, column: Int) : Location(row, column) {
+class Cell(row: Int, column: Int) : Point2D(row, column) {
 
     var northEdge = true
     var eastEdge = true
@@ -21,11 +21,11 @@ class Cell(row: Int, column: Int) : Location(row, column) {
         Direction.WEST -> ::westEdge
     }
 
-    private fun getEdgeByLocation(location: Location) = when {
-        isAbove(location) -> ::southEdge
-        isBelow(location) -> ::northEdge
-        isLeftTo(location) -> ::eastEdge
-        isRightTo(location) -> ::westEdge
+    private fun getEdgeByLocation(point: Point2D) = when {
+        isAbove(point) -> ::southEdge
+        isBelow(point) -> ::northEdge
+        isLeftTo(point) -> ::eastEdge
+        isRightTo(point) -> ::westEdge
         else -> null
     }
 

@@ -13,7 +13,7 @@ class BinaryTreeGenerator : IMazeGenerator {
             val neighborCell = listOf(NORTH, EAST)
                 .map(cell::moveTo)
                 .filter(maze::contains)
-                .map(maze::get)
+                .map(maze::getCell)
                 .randomOrNull()
 
             neighborCell?.let {
