@@ -1,5 +1,7 @@
 package de.ihmels.maze
 
+import de.ihmels.CellDto
+
 class Cell(row: Int, column: Int) : Point2D(row, column) {
 
     var northEdge = true
@@ -22,11 +24,25 @@ class Cell(row: Int, column: Int) : Point2D(row, column) {
     }
 
     private fun getEdgeByLocation(point: Point2D) = when {
-        isAbove(point) -> ::southEdge
         isBelow(point) -> ::northEdge
         isLeftTo(point) -> ::eastEdge
+        isAbove(point) -> ::southEdge
         isRightTo(point) -> ::westEdge
         else -> null
+    }
+
+    fun toDto(): CellDto = CellDto(row, column).also {
+        it.northEdge = northEdge
+        it.eastEdge = eastEdge
+        it.southEdge = southEdge
+        it.westEdge = westEdge
+    }
+
+    fun reset() {
+        northEdge = true
+        eastEdge = true
+        southEdge = true
+        westEdge = true
     }
 
 }

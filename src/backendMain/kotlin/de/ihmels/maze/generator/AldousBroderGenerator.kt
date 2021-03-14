@@ -7,7 +7,7 @@ class AldousBroderGenerator : IMazeGenerator {
 
     override fun generate(maze: Maze) {
 
-        var cell = maze.grid.random().random()
+        var cell = maze.cells.random()
 
         val visitedCells = mutableListOf(cell)
         var unvisited = maze.size - 1

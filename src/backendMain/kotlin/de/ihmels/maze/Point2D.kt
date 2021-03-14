@@ -12,6 +12,10 @@ open class Point2D(val row: Int, val column: Int) {
 
     infix fun moveTo(dir: Direction) = Point2D(row + dir.dy, column + dir.dx)
 
+    override fun toString(): String {
+        return "Point[$row:$column]"
+    }
+
     override fun equals(other: Any?): Boolean =
         if (other is Point2D) {
             row == other.row && column == other.column

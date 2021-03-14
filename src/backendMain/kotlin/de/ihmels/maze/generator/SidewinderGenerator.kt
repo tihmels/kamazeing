@@ -6,6 +6,13 @@ import de.ihmels.maze.Direction.NORTH
 import de.ihmels.maze.Maze
 import kotlin.random.Random
 
+/**
+ * Groups adjacent cells before carving a passage north on one of them.
+ * Needs to start in western column.
+ * Randomly do either:
+ *  1. carve passage east and add to group
+ *  2. choose one random from group and carve passage north. Then close the run
+ */
 class SidewinderGenerator : IMazeGenerator {
 
     override fun generate(maze: Maze) {

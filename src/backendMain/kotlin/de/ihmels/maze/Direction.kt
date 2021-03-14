@@ -1,17 +1,17 @@
 package de.ihmels.maze
 
-enum class Direction(val dx: Int, val dy: Int) {
+enum class Direction(val dy: Int, val dx: Int) {
 
-    NORTH(0, -1) {
+    NORTH(-1, 0) {
         override fun opposite() = SOUTH
     },
-    EAST(1, 0) {
+    EAST(0, 1) {
         override fun opposite() = WEST
     },
-    SOUTH(0, 1) {
+    SOUTH(1, 0) {
         override fun opposite() = NORTH
     },
-    WEST(-1, 0) {
+    WEST(0, -1) {
         override fun opposite() = EAST
     };
 

@@ -11,7 +11,7 @@ plugins {
 }
 
 version = "1.0.0-SNAPSHOT"
-group = "com.example"
+group = "de.ihmels"
 
 repositories {
     mavenCentral()
@@ -90,19 +90,9 @@ kotlin {
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("io.ktor:ktor-auth:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
-                implementation("com.h2database:h2:$h2Version")
                 implementation("org.jetbrains.exposed:exposed:$exposedVersion")
-                implementation("org.postgresql:postgresql:$pgsqlVersion")
-                implementation("com.zaxxer:HikariCP:$hikariVersion")
                 implementation("commons-codec:commons-codec:$commonsCodecVersion")
-                implementation("com.axiomalaska:jdbc-named-parameters:$jdbcNamedParametersVersion")
                 implementation("com.github.andrewoma.kwery:core:$kweryVersion")
-            }
-        }
-        val backendTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
             }
         }
         val frontendMain by getting {
@@ -128,12 +118,6 @@ kotlin {
                 implementation("io.kvision:kvision-moment:$kvisionVersion")
             }
             kotlin.srcDir("build/generated-src/frontend")
-        }
-        val frontendTest by getting {
-            dependencies {
-                implementation(kotlin("test-js"))
-                implementation("io.kvision:kvision-testutils:$kvisionVersion")
-            }
         }
     }
 }
