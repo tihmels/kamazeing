@@ -1,6 +1,17 @@
 package de.ihmels.maze
 
 import de.ihmels.CellDto
+import de.ihmels.Point2D
+
+fun Point2D.isAbove(point: Point2D) = point.row == row + 1 && point.column == column
+
+fun Point2D.isBelow(point: Point2D) = point.row == row - 1 && point.column == column
+
+fun Point2D.isLeftTo(point: Point2D) = point.column == column + 1 && point.row == row
+
+fun Point2D.isRightTo(point: Point2D) = point.column == column - 1 && point.row == row
+
+infix fun Point2D.moveTo(dir: Direction) = Point2D(row + dir.dy, column + dir.dx)
 
 class Cell(row: Int, column: Int) : Point2D(row, column) {
 

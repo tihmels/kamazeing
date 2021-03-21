@@ -13,4 +13,4 @@ pluginManagement {
         }
     }
 }
-rootProject.name = "kmazeing"
+rootProject.name = "kamazeing"

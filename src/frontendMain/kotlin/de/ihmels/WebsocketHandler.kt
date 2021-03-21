@@ -21,27 +21,18 @@ class WebsocketHandler(
     private val websocketService: WebsocketService = WebsocketService()
 
     private val outgoingChannel: Channel<CMessage> = Channel()
-    private val maxRetries = Constants.Websocket.maxReconnectTries
 
-    fun send(msg: CMessage) = launch { outgoingChannel.send(msg) }
+    fun send(msg: CMessageType) = launch { outgoingChannel.send(CMessage(msg)) }
 
     fun connect() = GlobalScope.launch {
-        var tries = 0
 
-        while (tries < maxRetries) {
+        connectionState.value = ESTABLISHING
 
-            if (connectionState.getState() != ESTABLISHING) connectionState.value = ESTABLISHING
+        websocketService.socketConnection { output, input ->
 
-            websocketService.socketConnection { output, input ->
+            connectionState.value = CONNECTED
 
-                tries = 0
-                connectionState.value = CONNECTED
-
-                connectChannels(output, input)
-            }
-
-            tries++
-            delay(2000)
+            connectChannels(output, input)
         }
 
         connectionState.value = DISCONNECTED

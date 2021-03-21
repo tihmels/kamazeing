@@ -22,6 +22,7 @@ repositories {
 // Versions
 val kotlinVersion: String by System.getProperties()
 val kvisionVersion: String by System.getProperties()
+val slf4jVersion: String by project
 val ktorVersion: String by project
 val exposedVersion: String by project
 val hikariVersion: String by project
@@ -77,12 +78,6 @@ kotlin {
             }
             kotlin.srcDir("build/generated-src/common")
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
-        }
         val backendMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
@@ -90,6 +85,7 @@ kotlin {
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("io.ktor:ktor-auth:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
+                implementation("org.slf4j:slf4j-api:$slf4jVersion")
                 implementation("org.jetbrains.exposed:exposed:$exposedVersion")
                 implementation("commons-codec:commons-codec:$commonsCodecVersion")
                 implementation("com.github.andrewoma.kwery:core:$kweryVersion")

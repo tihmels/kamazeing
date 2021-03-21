@@ -2,10 +2,12 @@ package de.ihmels.maze.generator
 
 import de.ihmels.maze.Direction
 import de.ihmels.maze.Maze
+import de.ihmels.maze.moveTo
+import kotlinx.coroutines.flow.flow
 
-class AldousBroderGenerator : IMazeGenerator {
+class AldousBroderGenerator : MazeGenerator {
 
-    override fun generate(maze: Maze) {
+    override fun generate(maze: Maze) = flow {
 
         var cell = maze.cells.random()
 
@@ -25,6 +27,7 @@ class AldousBroderGenerator : IMazeGenerator {
                 if (neighborCell !in visitedCells) {
 
                     cell.connect(neighborCell)
+                    emit(maze)
 
                     visitedCells.add(neighborCell)
                     unvisited--

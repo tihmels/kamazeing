@@ -3,10 +3,12 @@ package de.ihmels.maze.generator
 import de.ihmels.ds.ArrayListQueue
 import de.ihmels.maze.Direction
 import de.ihmels.maze.Maze
+import de.ihmels.maze.moveTo
+import kotlinx.coroutines.flow.flow
 
-class DepthFirstGenerator : IMazeGenerator {
+class DepthFirstGenerator : MazeGenerator {
 
-    override fun generate(maze: Maze) {
+    override fun generate(maze: Maze) = flow {
 
         var randomCell = maze.cells.random()
 
@@ -25,6 +27,8 @@ class DepthFirstGenerator : IMazeGenerator {
             if (randomNeighborCell != null) {
                 randomCell.connect(randomNeighborCell)
                 randomCell = randomNeighborCell
+
+                emit(maze)
 
                 queue.enqueue(randomCell)
                 visited.add(randomCell)

@@ -4,6 +4,10 @@ import de.ihmels.maze.Cell
 import de.ihmels.maze.Direction.EAST
 import de.ihmels.maze.Direction.NORTH
 import de.ihmels.maze.Maze
+import de.ihmels.maze.moveTo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlin.random.Random
 
 /**
@@ -13,9 +17,9 @@ import kotlin.random.Random
  *  1. carve passage east and add to group
  *  2. choose one random from group and carve passage north. Then close the run
  */
-class SidewinderGenerator : IMazeGenerator {
+class SidewinderGenerator : MazeGenerator {
 
-    override fun generate(maze: Maze) {
+    override fun generate(maze: Maze) = flow {
 
         for (row in maze.grid.shuffled()) {
 
@@ -39,11 +43,15 @@ class SidewinderGenerator : IMazeGenerator {
                         val northCell = maze.getCell(northLocation)
                         randomCell.connect(northCell)
                         run.clear()
+
+                        emit(maze)
                     }
 
                 } else {
                     val eastCell = maze.getCell(cell moveTo EAST)
                     cell.connect(eastCell)
+
+                    emit(maze)
                 }
 
             }

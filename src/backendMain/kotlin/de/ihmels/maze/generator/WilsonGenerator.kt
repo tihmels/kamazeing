@@ -2,10 +2,14 @@ package de.ihmels.maze.generator
 
 import de.ihmels.maze.Direction
 import de.ihmels.maze.Maze
+import de.ihmels.maze.moveTo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
-class WilsonGenerator : IMazeGenerator {
+class WilsonGenerator : MazeGenerator {
 
-    override fun generate(maze: Maze) {
+    override fun generate(maze: Maze) = flow {
 
         val unvisited = maze.cells.toMutableList()
 
@@ -34,9 +38,10 @@ class WilsonGenerator : IMazeGenerator {
             for (index in 0..path.size - 2) {
                 path[index].connect(path[index + 1])
                 unvisited.remove(path[index])
+
+                emit(maze)
             }
         }
-
 
     }
 

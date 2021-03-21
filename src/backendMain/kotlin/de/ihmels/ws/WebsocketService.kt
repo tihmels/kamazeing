@@ -1,25 +1,23 @@
 package de.ihmels.ws
 
 import de.ihmels.CMessage
+import de.ihmels.Logging
 import de.ihmels.SMessage
-import de.ihmels.SMessageType
-import de.ihmels.maze.Maze
-import de.ihmels.maze.generator.WilsonGenerator
+import de.ihmels.logger
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 
-actual class WebsocketService : IWebsocketService {
+actual class WebsocketService : IWebsocketService, Logging {
+
+    private val log = logger()
 
     override suspend fun socketConnection(input: ReceiveChannel<CMessage>, output: SendChannel<SMessage>) {
 
-        val maze = Maze(20, 20)
+        val client = Client(input, output).also { log.info("Client ${it.uuid} connected") }
 
-        output.send(SMessage(SMessageType.NewMaze(maze.toDto())))
+        ClientHandler(client).start()
 
-        for (message in input) {
-            println(message)
-        }
-
+        log.info("Client disconnected")
     }
 
 }

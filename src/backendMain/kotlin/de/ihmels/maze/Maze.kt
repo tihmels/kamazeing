@@ -2,10 +2,13 @@ package de.ihmels.maze
 
 import com.google.common.collect.ImmutableList
 import de.ihmels.MazeDto
-import de.ihmels.maze.generator.WilsonGenerator
+import de.ihmels.Point2D
+import de.ihmels.maze.generator.BinaryTreeGenerator
 import de.ihmels.maze.solver.DepthFirstSolver
 import de.ihmels.maze.solver.toList
 import de.ihmels.tree.TreeBuilder
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.runBlocking
 
 val topLeft = { _: Maze -> Point2D(0, 0) }
 val topRight = { maze: Maze -> Point2D(0, maze.columns - 1) }
@@ -13,8 +16,8 @@ val bottomLeft = { maze: Maze -> Point2D(maze.rows - 1, 0) }
 val bottomRight = { maze: Maze -> Point2D(maze.rows - 1, maze.columns - 1) }
 
 class Maze(
-    val rows: Int,
-    val columns: Int,
+    val rows: Int = 5,
+    val columns: Int = 5,
     startInitializer: (maze: Maze) -> Point2D = topLeft,
     goalInitializer: (maze: Maze) -> Point2D = bottomRight
 ) {
@@ -43,9 +46,9 @@ class Maze(
 
     fun isGoal(point: Point2D) = point == goal
 
-    fun getCell(point: Point2D): Cell = grid[point.row][point.column]
+    fun getCell(point: Point2D) = grid[point.row][point.column]
 
-    fun toDto() = MazeDto(rows, columns, cells.map(Cell::toDto))
+    fun toDto() = MazeDto(rows, columns, start, goal, cells.map(Cell::toDto))
 
     fun reset() {
         for (cell in cells) {
@@ -91,14 +94,14 @@ class Maze(
     }
 }
 
-fun main() {
+fun main() = runBlocking {
 
     val maze = Maze(6, 6)
-    val generator = WilsonGenerator()
+    val generator = BinaryTreeGenerator()
 
     println("Generate Maze")
 
-    generator.generate(maze)
+    generator.generate(maze).launchIn(this).join()
     println(maze.toString())
 
     val solver = DepthFirstSolver()
@@ -109,5 +112,6 @@ fun main() {
     } ?: println("No Solution could be found.")
 
     val graph = TreeBuilder.createTree(maze.start, maze::successors)
+
 
 }
