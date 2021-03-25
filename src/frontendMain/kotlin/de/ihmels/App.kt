@@ -96,7 +96,7 @@ private fun Container.header(connected: Boolean) {
 
                     button("Reset") {
                         onClick {
-                            AppService.getMaze()
+                            AppService.resetMaze()
                         }
                     }
                 }
@@ -107,7 +107,7 @@ private fun Container.header(connected: Boolean) {
 
 private fun Container.appView() {
 
-    AppService.getMaze()
+    AppService.resetMaze()
 
     div().bind(StateService.mazeState) {
         mazePanel(it.maze)

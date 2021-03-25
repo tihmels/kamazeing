@@ -59,7 +59,15 @@ sealed class CMessageType {
     data class SetGeneratorState(val command: GeneratorCommand) : CMessageType()
 
     @Serializable
-    data class ResetMaze(val rows: Int = 10, val columns: Int = 10) : CMessageType()
+    data class UpdateMaze(
+        val rows: Int? = null,
+        val columns: Int? = null,
+        val start: Point2D? = null,
+        val goal: Point2D? = null
+    ): CMessageType()
+
+    @Serializable
+    object ResetMaze : CMessageType()
 
 }
 

@@ -8,6 +8,8 @@ object AppService {
 
     val connectionState = websocketHandler.connectionState
 
+    fun connectToServer() = websocketHandler.connect()
+
     private fun messageHandler(message: SMessageType) = when (message) {
         is SMessageType.UpdateMaze -> handleMessage(message)
         is SMessageType.UpdateGeneratorState -> handleMessage(message)
@@ -21,20 +23,16 @@ object AppService {
         StateService.updateMaze(message.maze)
     }
 
-    fun connectToServer() = websocketHandler.connect()
+    fun updateMaze(
+        rows: Int? = null,
+        columns: Int? = null,
+        start: Point2D? = null,
+        goal: Point2D? = null
+    ) = websocketHandler.send(CMessageType.UpdateMaze(rows, columns, start, goal))
 
-    fun getMaze() {
-        websocketHandler.send(CMessageType.ResetMaze())
-    }
+    fun resetMaze() = websocketHandler.send(CMessageType.ResetMaze)
 
     fun sendGeneratorCommand(command: GeneratorCommand) = websocketHandler.send(CMessageType.SetGeneratorState(command))
 
-    fun generateMaze() {
-        websocketHandler.send(CMessageType.SetGeneratorState(GeneratorCommand.START))
-    }
-
-    fun skipGeneration() {
-        websocketHandler.send(CMessageType.SetGeneratorState(GeneratorCommand.SKIP))
-    }
 
 }
