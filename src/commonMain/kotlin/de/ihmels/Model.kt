@@ -22,30 +22,45 @@ open class Point2D(val row: Int, val column: Int) {
         hash = hash * 31 + column
         return hash
     }
+
 }
 
 @Serializable
 class CellDto(
     val row: Int,
-    val column: Int
+    val column: Int,
+    val northEdge: Boolean = true,
+    val eastEdge: Boolean = true,
+    val southEdge: Boolean = true,
+    val westEdge: Boolean = true,
 ) {
-    var northEdge = true
-    var eastEdge = true
-    var southEdge = true
-    var westEdge = true
 
     fun isClosed() = northEdge && eastEdge && southEdge && westEdge
+
+    fun toPoint2D() = Point2D(row, column)
+
 }
 
 @Serializable
 data class MazeDto(val rows: Int, val columns: Int, val start: Point2D, val goal: Point2D, val grid: List<CellDto>)
 
 @Serializable
+enum class SolverState {
+    UNSOLVED, SOLVING, SKIPPABLE, SOLVED
+}
+
+@Serializable
 enum class GeneratorState {
     UNINITIALIZED, RUNNING, SKIPPABLE, INITIALIZED
 }
 
+@Serializable
 enum class GeneratorCommand {
+    START, SKIP
+}
+
+@Serializable
+enum class PathCommand {
     START, SKIP
 }
 
@@ -56,7 +71,10 @@ data class CMessage(val messageType: CMessageType)
 sealed class CMessageType {
 
     @Serializable
-    data class SetGeneratorState(val command: GeneratorCommand) : CMessageType()
+    data class SetMazeGenerator(val command: GeneratorCommand) : CMessageType()
+
+    @Serializable
+    data class SetMazeSolver(val command: PathCommand) : CMessageType()
 
     @Serializable
     data class UpdateMaze(
@@ -64,10 +82,10 @@ sealed class CMessageType {
         val columns: Int? = null,
         val start: Point2D? = null,
         val goal: Point2D? = null
-    ): CMessageType()
+    ) : CMessageType()
 
     @Serializable
-    object ResetMaze : CMessageType()
+    object Reset : CMessageType()
 
 }
 
@@ -78,9 +96,15 @@ data class SMessage(val messageType: SMessageType)
 sealed class SMessageType {
 
     @Serializable
-    data class UpdateGeneratorState(val state: GeneratorState) : SMessageType()
+    data class UpdateGenerator(val state: GeneratorState) : SMessageType()
+
+    @Serializable
+    data class ResetMaze(val maze: MazeDto) : SMessageType()
 
     @Serializable
     data class UpdateMaze(val maze: MazeDto) : SMessageType()
+
+    @Serializable
+    data class UpdatePath(val path: List<Point2D>) : SMessageType()
 
 }

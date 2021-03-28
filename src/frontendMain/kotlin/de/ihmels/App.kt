@@ -8,6 +8,7 @@ import io.kvision.html.div
 import io.kvision.html.h1
 import io.kvision.html.h5
 import io.kvision.module
+import io.kvision.panel.ContainerType
 import io.kvision.panel.flexPanel
 import io.kvision.panel.root
 import io.kvision.require
@@ -26,19 +27,16 @@ class App : Application() {
 
         AppService.connectToServer()
 
-        root("kvapp", addRow = false) {
+        root("kvapp", containerType = ContainerType.FIXED) {
 
-            div(classes = setOf("container")) {
+            bind(AppService.connectionState) {
 
-                bind(AppService.connectionState) {
+                header(it == ConnectionState.CONNECTED)
 
-                    header(it == ConnectionState.CONNECTED)
-
-                    when (it) {
-                        ConnectionState.CONNECTED -> appView()
-                        ConnectionState.ESTABLISHING -> establishingView()
-                        ConnectionState.DISCONNECTED -> disconnectedView()
-                    }
+                when (it) {
+                    ConnectionState.CONNECTED -> appView()
+                    ConnectionState.ESTABLISHING -> establishingView()
+                    ConnectionState.DISCONNECTED -> disconnectedView()
                 }
             }
         }
@@ -94,6 +92,15 @@ private fun Container.header(connected: Boolean) {
 
                     }
 
+                    div().bind(generatorState) {
+                        button("Calculate") {
+                            disabled = it != GeneratorState.INITIALIZED
+                            onClick {
+                                AppService.sendPathCommand(PathCommand.START)
+                            }
+                        }
+                    }
+
                     button("Reset") {
                         onClick {
                             AppService.resetMaze()
@@ -109,8 +116,10 @@ private fun Container.appView() {
 
     AppService.resetMaze()
 
-    div().bind(StateService.mazeState) {
-        mazePanel(it.maze)
+    val mazeState = StateService.mazeState.sub { it.maze }
+
+    div().bind(mazeState) {
+        mazePanel(it)
     }
 
 

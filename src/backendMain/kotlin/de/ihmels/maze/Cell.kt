@@ -42,12 +42,7 @@ class Cell(row: Int, column: Int) : Point2D(row, column) {
         else -> null
     }
 
-    fun toDto(): CellDto = CellDto(row, column).also {
-        it.northEdge = northEdge
-        it.eastEdge = eastEdge
-        it.southEdge = southEdge
-        it.westEdge = westEdge
-    }
+    fun toDto(): CellDto = CellDto(row, column, northEdge, eastEdge, southEdge, westEdge)
 
     fun reset() {
         northEdge = true

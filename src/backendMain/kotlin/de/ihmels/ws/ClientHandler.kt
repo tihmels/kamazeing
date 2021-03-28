@@ -2,12 +2,11 @@ package de.ihmels.ws
 
 
 import de.ihmels.*
-import de.ihmels.SMessageType.UpdateGeneratorState
+import de.ihmels.SMessageType.UpdateGenerator
 import de.ihmels.SMessageType.UpdateMaze
 import de.ihmels.exception.FlowSkippedException
 import de.ihmels.maze.Maze
-import de.ihmels.maze.bottomRight
-import de.ihmels.maze.topLeft
+import de.ihmels.maze.solver.toList
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -20,6 +19,7 @@ class ClientHandler(private val client: Client) : Logging {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     private var generatorJob: Job? = null
+    private var solverJob: Job? = null
 
     private var finalValue: MazeDto? = null
 
@@ -29,7 +29,7 @@ class ClientHandler(private val client: Client) : Logging {
 
             for (message in client.input) {
 
-                log.info("Incoming Message from Client [$client]: ${message.messageType.javaClass.simpleName}")
+                log.info("Message from Client [$client]: ${message.messageType.javaClass.simpleName}")
 
                 handle(message.messageType)
             }
@@ -41,9 +41,10 @@ class ClientHandler(private val client: Client) : Logging {
     }
 
     private suspend fun handle(message: CMessageType) = when (message) {
-        is CMessageType.ResetMaze -> handleMessage(message)
-        is CMessageType.SetGeneratorState -> handleMessage(message)
+        is CMessageType.Reset -> handleMessage(message)
         is CMessageType.UpdateMaze -> handleMessage(message)
+        is CMessageType.SetMazeGenerator -> handleMessage(message)
+        is CMessageType.SetMazeSolver -> handleMessage(message)
         else -> {
         }
     }
@@ -52,30 +53,36 @@ class ClientHandler(private val client: Client) : Logging {
 
         scope.cancelChildrenIfActive()
 
-        clientState.maze = Maze(
+        val maze = Maze(
             message.rows ?: clientState.maze.rows,
             message.columns ?: clientState.maze.columns,
-            message.start?.let { { _ -> it } } ?: topLeft,
-            message.goal?.let { { _ -> it } } ?: bottomRight)
+            message.start?.let { { _ -> it } } ?: { clientState.maze.start },
+            message.goal?.let { { _ -> it } } ?: { clientState.maze.goal })
+
+        if (maze.dimension == clientState.maze.dimension) {
+            maze.grid = clientState.maze.grid
+        }
+
+        clientState.maze = maze
 
         client.send(UpdateMaze(clientState.maze.toDto()))
     }
 
-    private suspend fun handleMessage(message: CMessageType.ResetMaze) {
+    private suspend fun handleMessage(message: CMessageType.Reset) {
 
         scope.cancelChildrenIfActive()
 
         clientState.maze.reset()
 
-        client.send(UpdateMaze(clientState.maze.toDto()))
+        client.send(SMessageType.ResetMaze(clientState.maze.toDto()))
     }
 
-    private suspend fun handleMessage(message: CMessageType.SetGeneratorState) = when (message.command) {
-        GeneratorCommand.START -> startGeneration()
-        GeneratorCommand.SKIP -> skipGeneration()
+    private suspend fun handleMessage(message: CMessageType.SetMazeGenerator) = when (message.command) {
+        GeneratorCommand.START -> startGenerator()
+        GeneratorCommand.SKIP -> skipGenerator()
     }
 
-    private fun startGeneration() {
+    private fun startGenerator() {
 
         scope.cancelChildrenIfActive()
 
@@ -85,12 +92,12 @@ class ClientHandler(private val client: Client) : Logging {
 
         generatorJob = generatorFlow
             .onStart {
-                client.send(UpdateGeneratorState(GeneratorState.RUNNING))
+                client.send(UpdateGenerator(GeneratorState.RUNNING))
             }
             .map { it.toDto() }
             .onLastEmission {
                 finalValue = it
-                client.send(UpdateGeneratorState(GeneratorState.SKIPPABLE))
+                client.send(UpdateGenerator(GeneratorState.SKIPPABLE))
             }
             .buffer(1000)
             .delay(150)
@@ -100,15 +107,15 @@ class ClientHandler(private val client: Client) : Logging {
             .onCompletion { cause ->
                 finalValue = null
                 if (cause == null || cause is FlowSkippedException) {
-                    client.send(UpdateGeneratorState(GeneratorState.INITIALIZED))
+                    client.send(UpdateGenerator(GeneratorState.INITIALIZED))
                 } else {
-                    client.send(UpdateGeneratorState(GeneratorState.UNINITIALIZED))
+                    client.send(UpdateGenerator(GeneratorState.UNINITIALIZED))
                 }
             }
             .launchIn(this.scope)
     }
 
-    private suspend fun skipGeneration() {
+    private suspend fun skipGenerator() {
 
         finalValue?.let {
 
@@ -118,6 +125,33 @@ class ClientHandler(private val client: Client) : Logging {
         }
 
     }
+
+    private suspend fun handleMessage(message: CMessageType.SetMazeSolver) = when (message.command) {
+        PathCommand.START -> startPath()
+        PathCommand.SKIP -> skipPath()
+    }
+
+    private fun skipPath() {
+
+    }
+
+    private fun startPath() {
+
+        scope.cancelChildrenIfActive()
+
+        val solvingFlow = clientState.solver.solve(clientState.maze)
+
+        solverJob = solvingFlow
+            .filterNotNull()
+            .delay(150)
+            .onEach {
+                println("TEST")
+                client.send(SMessageType.UpdatePath(it.toList()))
+            }
+            .launchIn(this.scope)
+
+    }
+
 
 }
 

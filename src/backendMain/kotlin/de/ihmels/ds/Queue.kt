@@ -10,6 +10,9 @@ interface Queue<T> {
     val isEmpty: Boolean
         get() = count == 0
 
+    val isNotEmpty: Boolean
+        get() = count != 0
+
     fun peek(): T?
 
 }

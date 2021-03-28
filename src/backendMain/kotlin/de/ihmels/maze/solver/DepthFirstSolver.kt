@@ -2,13 +2,15 @@ package de.ihmels.maze.solver
 
 import de.ihmels.Point2D
 import de.ihmels.maze.Maze
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.util.*
 
-class DepthFirstSolver : IMazeSolver {
+class DepthFirstSolver : MazeSolver {
 
-    override fun solve(maze: Maze): Node<Point2D>? = dfs(maze.start, maze::isGoal, maze::successors)
+    override fun solve(maze: Maze): Flow<Node<Point2D>?> = dfs(maze.start, maze::isGoal, maze::successors)
 
-    private fun <T> dfs(initial: T, exitPredicate: (T) -> Boolean, successors: (T) -> List<T>): Node<T>? {
+    private fun <T> dfs(initial: T, exitPredicate: (T) -> Boolean, successors: (T) -> List<T>): Flow<Node<T>?> = flow {
 
         val frontier: Stack<Node<T>> = Stack()
         frontier.push(Node(initial, null))
@@ -21,8 +23,11 @@ class DepthFirstSolver : IMazeSolver {
             val currentNode = frontier.pop()
             val currentState = currentNode.value
 
+            emit(currentNode)
+
             if (exitPredicate(currentState)) {
-                return currentNode
+                emit(currentNode)
+                break;
             }
 
             for (child in successors(currentState)) {
@@ -35,8 +40,6 @@ class DepthFirstSolver : IMazeSolver {
                 frontier.push(Node(child, currentNode))
             }
         }
-
-        return null
     }
 
 }

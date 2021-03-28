@@ -5,7 +5,6 @@ import de.ihmels.MazeDto
 import de.ihmels.Point2D
 import de.ihmels.maze.generator.BinaryTreeGenerator
 import de.ihmels.maze.solver.DepthFirstSolver
-import de.ihmels.maze.solver.toList
 import de.ihmels.tree.TreeBuilder
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.runBlocking
@@ -22,10 +21,13 @@ class Maze(
     goalInitializer: (maze: Maze) -> Point2D = bottomRight
 ) {
 
-    val grid = List(rows) { row -> List(columns) { column -> Cell(row, column) } }
+    var grid = List(rows) { row -> List(columns) { column -> Cell(row, column) } }
 
-    val start = startInitializer(this)
-    private val goal = goalInitializer(this)
+    val start: Point2D = startInitializer(this).let { if (contains(it)) it else topLeft(this) }
+    val goal = goalInitializer(this)
+
+    val dimension
+        get() = Pair(rows, columns)
 
     val size
         get() = rows * columns
@@ -44,6 +46,12 @@ class Maze(
             .collect(ImmutableList.toImmutableList())
     }
 
+    fun manhattanDistance(point: Point2D): Double {
+        val xDist = Math.abs(point.column - goal.column)
+        val yDist = Math.abs(point.row - goal.row)
+        return (xDist + yDist).toDouble()
+    }
+
     fun isGoal(point: Point2D) = point == goal
 
     fun getCell(point: Point2D) = grid[point.row][point.column]
@@ -59,8 +67,7 @@ class Maze(
     operator fun contains(l: Point2D) = l.row >= 0 && l.column >= 0 && l.row < rows && l.column < columns
 
     override fun toString(): String = toString(emptyList())
-
-    fun toString(path: List<Point2D> = emptyList()): String {
+    private fun toString(path: List<Point2D> = emptyList()): String {
         val stringBuilder = StringBuilder()
 
         stringBuilder.append("+")
@@ -106,10 +113,6 @@ fun main() = runBlocking {
 
     val solver = DepthFirstSolver()
     val solution = solver.solve(maze)
-
-    solution?.let {
-        println(maze.toString(it.toList()))
-    } ?: println("No Solution could be found.")
 
     val graph = TreeBuilder.createTree(maze.start, maze::successors)
 
