@@ -2,7 +2,6 @@ package de.ihmels.skippable
 
 import de.ihmels.Point2D
 import de.ihmels.SolverState
-import de.ihmels.exception.FlowSkippedException
 import de.ihmels.maze.Maze
 import de.ihmels.maze.solver.Node
 import de.ihmels.maze.solver.factory.Solver
@@ -11,7 +10,7 @@ import kotlinx.coroutines.flow.*
 
 class SolverStateFlow {
 
-    private val _state = MutableStateFlow(SolverState.UNSOLVED)
+    private val _state = MutableStateFlow(SolverState.IDLE)
     val state get() = _state.asStateFlow()
 
     fun solve(solverId: Int, maze: Maze): Flow<Node<Point2D>?> {
@@ -20,14 +19,10 @@ class SolverStateFlow {
 
         return solver.solve(maze)
             .onStart {
-                _state.value = SolverState.SOLVING
+                _state.value = SolverState.RUNNING
             }
-            .onCompletion { cause ->
-                if (cause == null || cause is FlowSkippedException) {
-                    _state.value = SolverState.SOLVED
-                } else {
-                    _state.value = SolverState.UNSOLVED
-                }
+            .onCompletion {
+                _state.value = SolverState.IDLE
             }
 
     }

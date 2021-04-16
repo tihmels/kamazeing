@@ -1,8 +1,6 @@
 package de.ihmels
 
-import de.ihmels.CMessageType.GeneratorAction
-import de.ihmels.CMessageType.SolverAction
-import de.ihmels.ui.mazePanel
+import de.ihmels.ui.*
 import io.kvision.Application
 import io.kvision.core.*
 import io.kvision.html.button
@@ -61,43 +59,14 @@ private fun Container.header(connected: Boolean) {
 
                     height = 100.perc
 
-                    val generatorState = StateService.mazeState.sub { it.generatorState }
+                    button("Settings", "cog") {
 
-                    div().bind(generatorState) {
+                        onClick {
 
-                        when (it) {
-                            GeneratorState.UNINITIALIZED -> {
-                                button("Generate") {
-                                    onClick {
-                                        AppService.sendGeneratorCommand(GeneratorAction.Generate(0))
-                                    }
-                                }
-                            }
-                            GeneratorState.RUNNING -> {
-                                button("Skip") {
-                                    onClick {
-                                        AppService.sendGeneratorCommand(GeneratorAction.Skip)
-                                    }
-                                }
-                            }
-                            GeneratorState.INITIALIZED -> {
-                                button("Generate") {
-                                    onClick {
-                                        AppService.sendGeneratorCommand(GeneratorAction.Generate(0))
-                                    }
-                                }
-                            }
+                            SettingsModal().show()
+
                         }
 
-                    }
-
-                    div().bind(generatorState) {
-                        button("Calculate") {
-                            disabled = it != GeneratorState.INITIALIZED
-                            onClick {
-                                AppService.sendPathCommand(SolverAction.Solve(0))
-                            }
-                        }
                     }
 
                     button("Reset") {
@@ -120,10 +89,31 @@ private fun Container.appView() {
 
     val mazeState = StateService.mazeState.sub { it.maze }
 
-    div().bind(mazeState) {
-        mazePanel(it)
-    }
+    div(classes = setOf("row", "no-gutter")) {
 
+        div(className = "col").bind(mazeState) {
+            mazePanel(it)
+        }
+
+        div(classes = setOf("col", "col-auto")) {
+
+            val generatorStore = StateService.mazeState.sub { it.generatorAlgorithms }
+            val solverStore = StateService.mazeState.sub { it.solverAlgorithms }
+
+            sidebar {
+
+                div().bind(generatorStore) {
+                    generatorSettings(it)
+                }
+
+                div().bind(solverStore) {
+                    solverSettings(it)
+                }
+
+            }
+
+        }
+    }
 
 }
 

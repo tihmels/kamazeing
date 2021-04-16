@@ -52,12 +52,12 @@ data class MazeDto(val rows: Int, val columns: Int, val start: Point2D, val goal
 
 @Serializable
 enum class SolverState {
-    UNSOLVED, SOLVING, SOLVED
+    IDLE, RUNNING
 }
 
 @Serializable
 enum class GeneratorState {
-    UNINITIALIZED, RUNNING, INITIALIZED
+    IDLE, RUNNING
 }
 
 @Serializable
@@ -80,9 +80,6 @@ sealed class CMessageType {
         @Serializable
         data class Generate(val generatorId: Int) : GeneratorAction()
 
-        @Serializable
-        object Skip : GeneratorAction()
-
     }
 
     @Serializable
@@ -90,9 +87,6 @@ sealed class CMessageType {
 
         @Serializable
         data class Solve(val solverId: Int) : SolverAction()
-
-        @Serializable
-        object Skip : SolverAction()
 
     }
 

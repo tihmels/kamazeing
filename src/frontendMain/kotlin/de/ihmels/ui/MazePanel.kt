@@ -32,7 +32,7 @@ fun Container.mazePanel(maze: MazeDto?) {
 
             border = cellBorder
 
-            val pathStore = StateService.mazeState.sub { it.path }
+            val pathStore = StateService.mazeState.sub { it.solutionPath }
 
             bind(pathStore) { path ->
 

@@ -1,15 +1,16 @@
 package de.ihmels.ws
 
-import de.ihmels.*
+import de.ihmels.CMessageType
 import de.ihmels.CMessageType.*
+import de.ihmels.Entities
+import de.ihmels.Logging
 import de.ihmels.SMessageType.*
-import de.ihmels.exception.FlowSkippedException
+import de.ihmels.logger
 import de.ihmels.maze.generator.factory.Generator
 import de.ihmels.maze.solver.factory.Solver
 import de.ihmels.maze.solver.toList
 import de.ihmels.skippable.GeneratorStateFlow
 import de.ihmels.skippable.SolverStateFlow
-import de.ihmels.skippable.skippable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -34,9 +35,7 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
         try {
 
             for (message in client.input) {
-
                 handle(message.messageType)
-
             }
 
         } finally {
@@ -52,7 +51,6 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
             ResetMazeGrid -> resetMaze()
             is UpdateMazeProperties -> updateProperties(cMessage)
             is GeneratorAction.Generate -> generate(cMessage)
-            GeneratorAction.Skip -> skipGenerator()
             is SolverAction.Solve -> solve(cMessage)
             else -> {
                 throw IllegalStateException()
@@ -85,9 +83,11 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
 
     private suspend fun generate(message: GeneratorAction.Generate) = clearScope(scope) {
 
-        val state = store.value
+        val newState = Intent.ResetMaze.reduce(_store.value)
 
-        val flow = generatorManager.generateMaze(state.maze, message.generatorId)
+        _store.value = newState
+
+        val flow = generatorManager.generate(newState.maze, message.generatorId)
 
         generatorJob = flow
             .delay(100)
@@ -95,16 +95,7 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
                 _store.value = Intent.UpdateMaze(it).reduce(_store.value)
                 client.send(UpdateMaze(it.toDto()))
             }
-            .skippable { m -> m.cells.none { it.isClosed() } }
             .launchIn(scope)
-
-    }
-
-    private fun skipGenerator() {
-
-        if (generatorManager.state.value == GeneratorState.RUNNING) {
-            generatorJob?.cancel(FlowSkippedException())
-        }
 
     }
 
@@ -116,7 +107,7 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
 
             val flow = solverManager.solve(message.solverId, state.maze)
 
-            generatorJob = flow
+            solverJob = flow
                 .mapNotNull { it?.toList() }
                 .delay(100)
                 .onEach {
@@ -125,11 +116,6 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
                 .launchIn(scope)
 
         }
-
-    }
-
-    private fun skipSolver() {
-
 
     }
 

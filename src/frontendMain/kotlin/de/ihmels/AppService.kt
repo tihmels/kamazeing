@@ -62,10 +62,13 @@ object AppService {
     fun sendGeneratorCommand(action: GeneratorAction) =
         websocketHandler.send(action)
 
+    fun sendSolverCommand(action: SolverAction.Solve) = websocketHandler.send(action)
+
     fun sendPathCommand(action: SolverAction) = websocketHandler.send(action)
 
     fun getGeneratorAlgorithms() = websocketHandler.send(GetGeneratorAlgorithms)
 
     fun getSolverAlgorithms() = websocketHandler.send(GetSolverAlgorithms)
+
 
 }
