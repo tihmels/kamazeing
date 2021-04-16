@@ -35,7 +35,7 @@ class Maze(
         if (g in this) g else bottomRight(this)
     }
 
-    val dimension
+    val dimensions
         get() = Dimension(rows, columns)
 
     val size

@@ -45,7 +45,7 @@ class CellDto(
 data class IdAndName(val id: Int, val name: String)
 
 @Serializable
-data class Entities(val entities: List<IdAndName> = emptyList())
+data class Entities(val entities: List<IdAndName> = emptyList(), val default: Int? = null)
 
 @Serializable
 data class MazeDto(val rows: Int, val columns: Int, val start: Point2D, val goal: Point2D, val grid: List<CellDto>)

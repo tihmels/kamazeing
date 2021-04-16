@@ -59,20 +59,12 @@ private fun Container.header(connected: Boolean) {
 
                     height = 100.perc
 
-                    button("Settings", "cog") {
-
-                        onClick {
-
-                            SettingsModal().show()
-
-                        }
-
+                    button("Settings").onClick {
+                        SettingsModal().show()
                     }
 
-                    button("Reset") {
-                        onClick {
-                            AppService.resetMaze()
-                        }
+                    button("Reset").onClick {
+                        AppService.resetMaze()
                     }
                 }
             }

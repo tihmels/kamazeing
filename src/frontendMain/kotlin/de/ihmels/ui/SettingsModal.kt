@@ -2,6 +2,8 @@ package de.ihmels.ui
 
 import de.ihmels.AppService
 import de.ihmels.StateService
+import io.kvision.core.JustifyItems
+import io.kvision.core.PosFloat
 import io.kvision.form.formPanel
 import io.kvision.form.spinner.Spinner
 import io.kvision.html.ButtonType
@@ -22,11 +24,11 @@ class SettingsModal : Modal(caption = "Maze Settings") {
         val formPanel = formPanel<SettingsForm> {
             add(
                 SettingsForm::rows,
-                Spinner(label = "Rows", min = 5, max = 15, value = rows)
+                Spinner(label = "Rows", min = 5, max = 17, value = rows)
             )
             add(
                 SettingsForm::columns,
-                Spinner(label = "Columns", min = 5, max = 15, value = columns)
+                Spinner(label = "Columns", min = 5, max = 17, value = columns)
             )
         }
 

@@ -24,11 +24,12 @@ sealed class Intent<T> {
                 properties.start?.let { { _ -> it } } ?: { oldMaze.start },
                 properties.goal?.let { { _ -> it } } ?: { oldMaze.goal })
 
-            if (newMaze.dimension == oldMaze.dimension) {
+            if (newMaze.dimensions == oldMaze.dimensions) {
                 newMaze.grid = oldMaze.grid
             }
 
             return old.copy(maze = newMaze, initialized = newMaze.cells.none { it.isClosed() })
+
         }
 
     }

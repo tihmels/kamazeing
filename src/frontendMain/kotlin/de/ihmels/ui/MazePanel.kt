@@ -1,9 +1,6 @@
 package de.ihmels.ui
 
-import de.ihmels.AppService
-import de.ihmels.CellDto
-import de.ihmels.MazeDto
-import de.ihmels.StateService
+import de.ihmels.*
 import io.kvision.core.*
 import io.kvision.core.Display.INLINEGRID
 import io.kvision.html.Div
@@ -24,6 +21,8 @@ fun Container.mazePanel(maze: MazeDto?) {
     maze?.let {
 
         gridPanel {
+
+            marginBottom = 15.px
 
             display = INLINEGRID
 

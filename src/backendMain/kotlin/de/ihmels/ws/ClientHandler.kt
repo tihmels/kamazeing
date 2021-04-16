@@ -57,9 +57,11 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
             }
         }
 
-    private suspend fun sendGeneratorAlgorithms() = client.send(Generators(Entities(Generator.toEntities())))
+    private suspend fun sendGeneratorAlgorithms() =
+        client.send(Generators(Entities(Generator.toEntities(), Generator.default().id)))
 
-    private suspend fun sendSolverAlgorithms() = client.send(Solvers(Entities(Solver.toEntities())))
+    private suspend fun sendSolverAlgorithms() =
+        client.send(Solvers(Entities(Solver.toEntities(), Solver.default().id)))
 
     private suspend fun resetMaze() = clearScope(scope) {
 
@@ -109,7 +111,7 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
 
             solverJob = flow
                 .mapNotNull { it?.toList() }
-                .delay(100)
+                .delay(200)
                 .onEach {
                     client.send(UpdatePath(it))
                 }
