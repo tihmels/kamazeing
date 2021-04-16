@@ -5,9 +5,7 @@ import de.ihmels.maze.Direction.EAST
 import de.ihmels.maze.Direction.NORTH
 import de.ihmels.maze.Maze
 import de.ihmels.maze.moveTo
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlin.random.Random
 
 /**

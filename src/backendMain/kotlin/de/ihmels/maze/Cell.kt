@@ -42,6 +42,8 @@ class Cell(row: Int, column: Int) : Point2D(row, column) {
         else -> null
     }
 
+    fun isClosed(): Boolean = northEdge && eastEdge && southEdge && westEdge
+
     fun toDto(): CellDto = CellDto(row, column, northEdge, eastEdge, southEdge, westEdge)
 
     fun reset() {

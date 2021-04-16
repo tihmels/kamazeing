@@ -42,27 +42,31 @@ class CellDto(
 }
 
 @Serializable
+data class IdAndName(val id: Int, val name: String)
+
+@Serializable
+data class Entities(val entities: List<IdAndName> = emptyList())
+
+@Serializable
 data class MazeDto(val rows: Int, val columns: Int, val start: Point2D, val goal: Point2D, val grid: List<CellDto>)
 
 @Serializable
 enum class SolverState {
-    UNSOLVED, SOLVING, SKIPPABLE, SOLVED
+    UNSOLVED, SOLVING, SOLVED
 }
 
 @Serializable
 enum class GeneratorState {
-    UNINITIALIZED, RUNNING, SKIPPABLE, INITIALIZED
+    UNINITIALIZED, RUNNING, INITIALIZED
 }
 
 @Serializable
-enum class GeneratorCommand {
-    START, SKIP
-}
-
-@Serializable
-enum class PathCommand {
-    START, SKIP
-}
+data class MazeProperties(
+    val rows: Int? = null,
+    val columns: Int? = null,
+    val start: Point2D? = null,
+    val goal: Point2D? = null
+)
 
 @Serializable
 data class CMessage(val messageType: CMessageType)
@@ -71,21 +75,40 @@ data class CMessage(val messageType: CMessageType)
 sealed class CMessageType {
 
     @Serializable
-    data class SetMazeGenerator(val command: GeneratorCommand) : CMessageType()
+    sealed class GeneratorAction : CMessageType() {
+
+        @Serializable
+        data class Generate(val generatorId: Int) : GeneratorAction()
+
+        @Serializable
+        object Skip : GeneratorAction()
+
+    }
 
     @Serializable
-    data class SetMazeSolver(val command: PathCommand) : CMessageType()
+    sealed class SolverAction : CMessageType() {
+
+        @Serializable
+        data class Solve(val solverId: Int) : SolverAction()
+
+        @Serializable
+        object Skip : SolverAction()
+
+    }
 
     @Serializable
-    data class UpdateMaze(
-        val rows: Int? = null,
-        val columns: Int? = null,
-        val start: Point2D? = null,
-        val goal: Point2D? = null
+    object GetGeneratorAlgorithms : CMessageType()
+
+    @Serializable
+    object GetSolverAlgorithms : CMessageType()
+
+    @Serializable
+    data class UpdateMazeProperties(
+        val properties: MazeProperties
     ) : CMessageType()
 
     @Serializable
-    object Reset : CMessageType()
+    object ResetMazeGrid : CMessageType()
 
 }
 
@@ -96,13 +119,22 @@ data class SMessage(val messageType: SMessageType)
 sealed class SMessageType {
 
     @Serializable
-    data class UpdateGenerator(val state: GeneratorState) : SMessageType()
+    data class UpdateGeneratorState(val state: GeneratorState) : SMessageType()
+
+    @Serializable
+    data class UpdateSolverState(val state: SolverState) : SMessageType()
 
     @Serializable
     data class ResetMaze(val maze: MazeDto) : SMessageType()
 
     @Serializable
     data class UpdateMaze(val maze: MazeDto) : SMessageType()
+
+    @Serializable
+    data class Generators(val generators: Entities) : SMessageType()
+
+    @Serializable
+    data class Solvers(val solvers: Entities) : SMessageType()
 
     @Serializable
     data class UpdatePath(val path: List<Point2D>) : SMessageType()

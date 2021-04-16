@@ -1,9 +1,11 @@
 package de.ihmels
 
+import de.ihmels.CMessageType.*
+
 object AppService {
 
     private val websocketHandler = WebsocketHandler {
-        this.messageHandler(it.messageType)
+        messageHandler(it.messageType)
     }
 
     val connectionState = websocketHandler.connectionState
@@ -12,12 +14,27 @@ object AppService {
 
     private fun messageHandler(message: SMessageType) = when (message) {
         is SMessageType.UpdateMaze -> handleMessage(message)
-        is SMessageType.UpdateGenerator -> handleMessage(message)
+        is SMessageType.UpdateGeneratorState -> handleMessage(message)
         is SMessageType.UpdatePath -> handleMessage(message)
         is SMessageType.ResetMaze -> handleMessage(message)
+        is SMessageType.Generators -> handleMessage(message)
+        is SMessageType.Solvers -> handleMessage(message)
+        is SMessageType.UpdateSolverState -> handleMessage(message)
     }
 
-    private fun handleMessage(message: SMessageType.UpdateGenerator) {
+    private fun handleMessage(message: SMessageType.UpdateSolverState) {
+        StateService.updateSolverState(message.state)
+    }
+
+    private fun handleMessage(message: SMessageType.Solvers) {
+        StateService.updateSolverAlgorithms(message.solvers)
+    }
+
+    private fun handleMessage(message: SMessageType.Generators) {
+        StateService.updateGeneratorAlgorithms(message.generators)
+    }
+
+    private fun handleMessage(message: SMessageType.UpdateGeneratorState) {
         StateService.updateGeneratorState(message.state)
     }
 
@@ -38,11 +55,17 @@ object AppService {
         columns: Int? = null,
         start: Point2D? = null,
         goal: Point2D? = null
-    ) = websocketHandler.send(CMessageType.UpdateMaze(rows, columns, start, goal))
+    ) = websocketHandler.send(UpdateMazeProperties(MazeProperties(rows, columns, start, goal)))
 
-    fun resetMaze() = websocketHandler.send(CMessageType.Reset)
+    fun resetMaze() = websocketHandler.send(ResetMazeGrid)
 
-    fun sendGeneratorCommand(command: GeneratorCommand) = websocketHandler.send(CMessageType.SetMazeGenerator(command))
-    fun sendPathCommand(command: PathCommand) = websocketHandler.send(CMessageType.SetMazeSolver(command))
+    fun sendGeneratorCommand(action: GeneratorAction) =
+        websocketHandler.send(action)
+
+    fun sendPathCommand(action: SolverAction) = websocketHandler.send(action)
+
+    fun getGeneratorAlgorithms() = websocketHandler.send(GetGeneratorAlgorithms)
+
+    fun getSolverAlgorithms() = websocketHandler.send(GetSolverAlgorithms)
 
 }

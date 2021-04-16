@@ -1,27 +1,33 @@
 package de.ihmels.ws
 
-
 import de.ihmels.*
-import de.ihmels.SMessageType.UpdateGenerator
-import de.ihmels.SMessageType.UpdateMaze
+import de.ihmels.CMessageType.*
+import de.ihmels.SMessageType.*
 import de.ihmels.exception.FlowSkippedException
-import de.ihmels.maze.Maze
+import de.ihmels.maze.generator.factory.Generator
+import de.ihmels.maze.solver.factory.Solver
 import de.ihmels.maze.solver.toList
+import de.ihmels.skippable.GeneratorStateFlow
+import de.ihmels.skippable.SolverStateFlow
+import de.ihmels.skippable.skippable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-class ClientHandler(private val client: Client) : Logging {
+class ClientHandler(private val client: Client) : Logging, ClientMessageHandler {
 
     private val log = logger()
 
-    private val clientState = ClientState()
-
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
+    private val supervisorJob = SupervisorJob()
     private var generatorJob: Job? = null
     private var solverJob: Job? = null
 
-    private var finalValue: MazeDto? = null
+    private val scope = CoroutineScope(supervisorJob + Dispatchers.Default)
+
+    private val _store = MutableStateFlow(ClientState())
+    private val store = _store.asStateFlow()
+
+    private val generatorManager = GeneratorStateFlow()
+    private val solverManager = SolverStateFlow()
 
     suspend fun start() {
 
@@ -29,9 +35,8 @@ class ClientHandler(private val client: Client) : Logging {
 
             for (message in client.input) {
 
-                log.info("Message from Client [$client]: ${message.messageType.javaClass.simpleName}")
-
                 handle(message.messageType)
+
             }
 
         } finally {
@@ -40,132 +45,111 @@ class ClientHandler(private val client: Client) : Logging {
 
     }
 
-    private suspend fun handle(message: CMessageType) = when (message) {
-        is CMessageType.Reset -> handleMessage(message)
-        is CMessageType.UpdateMaze -> handleMessage(message)
-        is CMessageType.SetMazeGenerator -> handleMessage(message)
-        is CMessageType.SetMazeSolver -> handleMessage(message)
-        else -> {
-        }
-    }
-
-    private suspend fun handleMessage(message: CMessageType.UpdateMaze) {
-
-        scope.cancelChildrenIfActive()
-
-        val maze = Maze(
-            message.rows ?: clientState.maze.rows,
-            message.columns ?: clientState.maze.columns,
-            message.start?.let { { _ -> it } } ?: { clientState.maze.start },
-            message.goal?.let { { _ -> it } } ?: { clientState.maze.goal })
-
-        if (maze.dimension == clientState.maze.dimension) {
-            maze.grid = clientState.maze.grid
+    override suspend fun handle(cMessage: CMessageType) =
+        when (cMessage) {
+            GetGeneratorAlgorithms -> sendGeneratorAlgorithms()
+            GetSolverAlgorithms -> sendSolverAlgorithms()
+            ResetMazeGrid -> resetMaze()
+            is UpdateMazeProperties -> updateProperties(cMessage)
+            is GeneratorAction.Generate -> generate(cMessage)
+            GeneratorAction.Skip -> skipGenerator()
+            is SolverAction.Solve -> solve(cMessage)
+            else -> {
+                throw IllegalStateException()
+            }
         }
 
-        clientState.maze = maze
+    private suspend fun sendGeneratorAlgorithms() = client.send(Generators(Entities(Generator.toEntities())))
 
-        client.send(UpdateMaze(clientState.maze.toDto()))
+    private suspend fun sendSolverAlgorithms() = client.send(Solvers(Entities(Solver.toEntities())))
+
+    private suspend fun resetMaze() = clearScope(scope) {
+
+        val newState = Intent.ResetMaze.reduce(_store.value)
+
+        _store.value = newState
+
+        client.send(ResetMaze(newState.maze.toDto()))
+
     }
 
-    private suspend fun handleMessage(message: CMessageType.Reset) {
+    private suspend fun updateProperties(message: UpdateMazeProperties) = clearScope(scope) {
 
-        scope.cancelChildrenIfActive()
+        val newState = Intent.UpdateMazeProperties(message.properties).reduce(_store.value)
 
-        clientState.maze.reset()
+        _store.value = newState
 
-        client.send(SMessageType.ResetMaze(clientState.maze.toDto()))
+        client.send(UpdateMaze(newState.maze.toDto()))
+
     }
 
-    private suspend fun handleMessage(message: CMessageType.SetMazeGenerator) = when (message.command) {
-        GeneratorCommand.START -> startGenerator()
-        GeneratorCommand.SKIP -> skipGenerator()
-    }
+    private suspend fun generate(message: GeneratorAction.Generate) = clearScope(scope) {
 
-    private fun startGenerator() {
+        val state = store.value
 
-        scope.cancelChildrenIfActive()
+        val flow = generatorManager.generateMaze(state.maze, message.generatorId)
 
-        clientState.maze.reset()
-
-        val generatorFlow = clientState.generator.generate(clientState.maze)
-
-        generatorJob = generatorFlow
-            .onStart {
-                client.send(UpdateGenerator(GeneratorState.RUNNING))
-            }
-            .map { it.toDto() }
-            .onLastEmission {
-                finalValue = it
-                client.send(UpdateGenerator(GeneratorState.SKIPPABLE))
-            }
-            .buffer(1000)
-            .delay(150)
+        generatorJob = flow
+            .delay(100)
             .onEach {
-                client.send(UpdateMaze(it))
+                _store.value = Intent.UpdateMaze(it).reduce(_store.value)
+                client.send(UpdateMaze(it.toDto()))
             }
-            .onCompletion { cause ->
-                finalValue = null
-                if (cause == null || cause is FlowSkippedException) {
-                    client.send(UpdateGenerator(GeneratorState.INITIALIZED))
-                } else {
-                    client.send(UpdateGenerator(GeneratorState.UNINITIALIZED))
+            .skippable { m -> m.cells.none { it.isClosed() } }
+            .launchIn(scope)
+
+    }
+
+    private fun skipGenerator() {
+
+        if (generatorManager.state.value == GeneratorState.RUNNING) {
+            generatorJob?.cancel(FlowSkippedException())
+        }
+
+    }
+
+    private suspend fun solve(message: SolverAction.Solve) = clearScope(scope) {
+
+        val state = store.value
+
+        if (state.initialized) {
+
+            val flow = solverManager.solve(message.solverId, state.maze)
+
+            generatorJob = flow
+                .mapNotNull { it?.toList() }
+                .delay(100)
+                .onEach {
+                    client.send(UpdatePath(it))
                 }
-            }
-            .launchIn(this.scope)
-    }
-
-    private suspend fun skipGenerator() {
-
-        finalValue?.let {
-
-            generatorJob?.cancelAndJoin(FlowSkippedException())
-            client.send(UpdateMaze(it))
+                .launchIn(scope)
 
         }
 
     }
 
-    private suspend fun handleMessage(message: CMessageType.SetMazeSolver) = when (message.command) {
-        PathCommand.START -> startPath()
-        PathCommand.SKIP -> skipPath()
-    }
+    private fun skipSolver() {
 
-    private fun skipPath() {
 
     }
 
-    private fun startPath() {
+    init {
 
-        scope.cancelChildrenIfActive()
+        generatorManager.state.onEach {
+            client.send(UpdateGeneratorState(it))
+        }.launchIn(scope + Job())
 
-        val solvingFlow = clientState.solver.solve(clientState.maze)
-
-        solverJob = solvingFlow
-            .filterNotNull()
-            .delay(150)
-            .onEach {
-                println("TEST")
-                client.send(SMessageType.UpdatePath(it.toList()))
-            }
-            .launchIn(this.scope)
+        solverManager.state.onEach {
+            client.send(UpdateSolverState(it))
+        }.launchIn(scope + Job())
 
     }
-
 
 }
 
-fun CoroutineScope.cancelChildrenIfActive() {
-    if (isActive) coroutineContext.cancelChildren()
-}
-
-fun <T> Flow<T>.onLastEmission(block: suspend (T?) -> Unit) = flow {
-    var final: T? = null
-    collect {
-        emit(it)
-        final = it
-    }
-    block(final)
+suspend fun clearScope(scope: CoroutineScope, block: suspend () -> Unit) {
+    scope.coroutineContext.cancelChildren()
+    block()
 }
 
 fun <T> Flow<T>.delay(time: Long): Flow<T> = flow {

@@ -1,5 +1,7 @@
 package de.ihmels
 
+import de.ihmels.CMessageType.GeneratorAction
+import de.ihmels.CMessageType.SolverAction
 import de.ihmels.ui.mazePanel
 import io.kvision.Application
 import io.kvision.core.*
@@ -67,24 +69,21 @@ private fun Container.header(connected: Boolean) {
                             GeneratorState.UNINITIALIZED -> {
                                 button("Generate") {
                                     onClick {
-                                        AppService.sendGeneratorCommand(GeneratorCommand.START)
+                                        AppService.sendGeneratorCommand(GeneratorAction.Generate(0))
                                     }
                                 }
                             }
                             GeneratorState.RUNNING -> {
-                                button("Skip", disabled = true)
-                            }
-                            GeneratorState.SKIPPABLE -> {
                                 button("Skip") {
                                     onClick {
-                                        AppService.sendGeneratorCommand(GeneratorCommand.SKIP)
+                                        AppService.sendGeneratorCommand(GeneratorAction.Skip)
                                     }
                                 }
                             }
                             GeneratorState.INITIALIZED -> {
                                 button("Generate") {
                                     onClick {
-                                        AppService.sendGeneratorCommand(GeneratorCommand.START)
+                                        AppService.sendGeneratorCommand(GeneratorAction.Generate(0))
                                     }
                                 }
                             }
@@ -96,7 +95,7 @@ private fun Container.header(connected: Boolean) {
                         button("Calculate") {
                             disabled = it != GeneratorState.INITIALIZED
                             onClick {
-                                AppService.sendPathCommand(PathCommand.START)
+                                AppService.sendPathCommand(SolverAction.Solve(0))
                             }
                         }
                     }
@@ -115,6 +114,9 @@ private fun Container.header(connected: Boolean) {
 private fun Container.appView() {
 
     AppService.resetMaze()
+
+    AppService.getGeneratorAlgorithms()
+    AppService.getSolverAlgorithms()
 
     val mazeState = StateService.mazeState.sub { it.maze }
 

@@ -9,6 +9,8 @@ import de.ihmels.tree.TreeBuilder
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.runBlocking
 
+typealias Dimension = Pair<Int, Int>
+
 val topLeft = { _: Maze -> Point2D(0, 0) }
 val topRight = { maze: Maze -> Point2D(0, maze.columns - 1) }
 val bottomLeft = { maze: Maze -> Point2D(maze.rows - 1, 0) }
@@ -23,11 +25,18 @@ class Maze(
 
     var grid = List(rows) { row -> List(columns) { column -> Cell(row, column) } }
 
-    val start: Point2D = startInitializer(this).let { if (contains(it)) it else topLeft(this) }
-    val goal = goalInitializer(this)
+    val start: Point2D by lazy {
+        val s = startInitializer(this)
+        if (s in this) s else topLeft(this)
+    }
+
+    val goal: Point2D by lazy {
+        val g = goalInitializer(this)
+        if (g in this) g else bottomRight(this)
+    }
 
     val dimension
-        get() = Pair(rows, columns)
+        get() = Dimension(rows, columns)
 
     val size
         get() = rows * columns
@@ -40,9 +49,9 @@ class Maze(
 
         return Direction.values().asList().stream()
             .filter { !cell.hasWallInDirection(it) }
-            .map { point.moveTo(it) }
-            .filter { this.contains(it) }
-            .map { this.getCell(it) }
+            .map { point moveTo it }
+            .filter { contains(it) }
+            .map { getCell(it) }
             .collect(ImmutableList.toImmutableList())
     }
 

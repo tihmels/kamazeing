@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.flow
 import java.util.*
 
 class AstarSolver : MazeSolver {
+
     override fun solve(maze: Maze): Flow<Node<Point2D>?> =
         astar(maze.start, maze::isGoal, maze::successors, maze::manhattanDistance)
 

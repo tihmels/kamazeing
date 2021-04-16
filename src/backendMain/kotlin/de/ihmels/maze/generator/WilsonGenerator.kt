@@ -3,9 +3,7 @@ package de.ihmels.maze.generator
 import de.ihmels.maze.Direction
 import de.ihmels.maze.Maze
 import de.ihmels.maze.moveTo
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 
 class WilsonGenerator : MazeGenerator {
 

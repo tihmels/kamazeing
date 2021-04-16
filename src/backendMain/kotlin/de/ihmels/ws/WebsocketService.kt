@@ -18,6 +18,7 @@ actual class WebsocketService : IWebsocketService, Logging {
         ClientHandler(client).start()
 
         log.info("Client ${client.uuid} disconnected")
+
     }
 
 }
