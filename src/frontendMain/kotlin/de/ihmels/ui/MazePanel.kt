@@ -86,9 +86,9 @@ fun Container.cell(cell: CellDto, init: Div.() -> Unit) {
 
         setDropTargetData("text/plain") { data ->
             if (data == "start") {
-                AppService.updateMaze(start = cell.toPoint2D())
+                AppService.Request.updateMaze(start = cell.toPoint2D())
             } else if (data == "goal") {
-                AppService.updateMaze(goal = cell.toPoint2D())
+                AppService.Request.updateMaze(goal = cell.toPoint2D())
             }
         }
     }

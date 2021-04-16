@@ -120,10 +120,5 @@ fun main() = runBlocking {
     generator.generate(maze).launchIn(this).join()
     println(maze.toString())
 
-    val solver = DepthFirstSolver()
-    val solution = solver.solve(maze)
-
-    val graph = TreeBuilder.createTree(maze.start, maze::successors)
-
 
 }

@@ -64,7 +64,7 @@ private fun Container.header(connected: Boolean) {
                     }
 
                     button("Reset").onClick {
-                        AppService.resetMaze()
+                        AppService.Request.resetMaze()
                     }
                 }
             }
@@ -74,10 +74,10 @@ private fun Container.header(connected: Boolean) {
 
 private fun Container.appView() {
 
-    AppService.resetMaze()
+    AppService.Request.resetMaze()
 
-    AppService.getGeneratorAlgorithms()
-    AppService.getSolverAlgorithms()
+    AppService.Request.getGeneratorAlgorithms()
+    AppService.Request.getSolverAlgorithms()
 
     val mazeState = StateService.mazeState.sub { it.maze }
 

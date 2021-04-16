@@ -2,8 +2,6 @@ package de.ihmels.ui
 
 import de.ihmels.AppService
 import de.ihmels.StateService
-import io.kvision.core.JustifyItems
-import io.kvision.core.PosFloat
 import io.kvision.form.formPanel
 import io.kvision.form.spinner.Spinner
 import io.kvision.html.ButtonType
@@ -33,8 +31,8 @@ class SettingsModal : Modal(caption = "Maze Settings") {
         }
 
         button("Submit", type = ButtonType.SUBMIT).onClick {
-            val (r, c) = formPanel.getData()
-            AppService.updateMaze(rows = r, columns = c)
+            val (row, column) = formPanel.getData()
+            AppService.Request.updateMaze(rows = row, columns = column)
             this@SettingsModal.hide()
         }
 

@@ -26,7 +26,7 @@ fun Container.solverSettings(solvers: Entities) {
         button("Solve").onClick {
 
             val solver = form.getData().selectedSolver.toInt()
-            AppService.sendSolverCommand(SolverAction.Solve(solver))
+            AppService.Request.solverAction(SolverAction.Solve(solver))
 
         }.bind(StateService.mazeState) {
             disabled = it.solverState == SolverState.RUNNING || it.initialized == false

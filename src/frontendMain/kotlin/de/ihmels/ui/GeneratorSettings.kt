@@ -29,7 +29,7 @@ fun Container.generatorSettings(generators: Entities) {
         button("Generate").onClick {
 
             val generator = form.getData().selectedGenerator.toInt()
-            AppService.sendGeneratorCommand(GeneratorAction.Generate(generator))
+            AppService.Request.generatorAction(GeneratorAction.Generate(generator))
 
         }.bind(generatorState) {
             disabled = it == GeneratorState.RUNNING

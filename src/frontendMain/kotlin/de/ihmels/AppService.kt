@@ -50,25 +50,27 @@ object AppService {
         StateService.resetMaze(message.maze)
     }
 
-    fun updateMaze(
-        rows: Int? = null,
-        columns: Int? = null,
-        start: Point2D? = null,
-        goal: Point2D? = null
-    ) = websocketHandler.send(UpdateMazeProperties(MazeProperties(rows, columns, start, goal)))
+    object Request {
 
-    fun resetMaze() = websocketHandler.send(ResetMazeGrid)
+        fun resetMaze() = websocketHandler.send(ResetMazeGrid)
 
-    fun sendGeneratorCommand(action: GeneratorAction) =
-        websocketHandler.send(action)
+        fun updateMaze(
+            rows: Int? = null,
+            columns: Int? = null,
+            start: Point2D? = null,
+            goal: Point2D? = null
+        ) = websocketHandler.send(UpdateMazeProperties(MazeProperties(rows, columns, start, goal)))
 
-    fun sendSolverCommand(action: SolverAction.Solve) = websocketHandler.send(action)
+        fun generatorAction(action: GeneratorAction) =
+            websocketHandler.send(action)
 
-    fun sendPathCommand(action: SolverAction) = websocketHandler.send(action)
+        fun solverAction(action: SolverAction) = websocketHandler.send(action)
 
-    fun getGeneratorAlgorithms() = websocketHandler.send(GetGeneratorAlgorithms)
+        fun getGeneratorAlgorithms() = websocketHandler.send(GetGeneratorAlgorithms)
 
-    fun getSolverAlgorithms() = websocketHandler.send(GetSolverAlgorithms)
+        fun getSolverAlgorithms() = websocketHandler.send(GetSolverAlgorithms)
+
+    }
 
 
 }
