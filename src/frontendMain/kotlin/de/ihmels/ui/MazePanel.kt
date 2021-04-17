@@ -25,6 +25,8 @@ fun Container.mazePanel(maze: MazeDto) {
 
     gridPanel {
 
+        addCssClass("maze-grid")
+
         marginBottom = 15.px
 
         display = INLINEGRID
@@ -64,8 +66,6 @@ private fun Div.setPathCell(
 ) {
 
     val index = path.indexOf(point)
-
-    val predecessor = path.getOrElse(index - 1) { path[0] }
     val successor = path.getOrNull(index + 1)
 
     if (successor != null) {
@@ -81,6 +81,9 @@ private fun Div.setPathCell(
         image(stepImage, responsive = true, centered = true, classes = setOf("p-3"))
 
     } else {
+
+        val predecessor = path.getOrElse(index - 1) { path[0] }
+
         val stepImage = when {
             point.isAbove(predecessor) -> STEP_UP
             point.isRightTo(predecessor) -> STEP_RIGHT
