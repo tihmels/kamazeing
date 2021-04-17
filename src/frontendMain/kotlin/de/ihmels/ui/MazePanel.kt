@@ -1,9 +1,6 @@
 package de.ihmels.ui
 
-import de.ihmels.AppService
-import de.ihmels.CellDto
-import de.ihmels.MazeDto
-import de.ihmels.StateService
+import de.ihmels.*
 import io.kvision.core.*
 import io.kvision.core.Display.INLINEGRID
 import io.kvision.html.*
@@ -48,28 +45,9 @@ fun Container.mazePanel(maze: MazeDto) {
                     cell(cell) {
 
                         when (val point = cell.toPoint2D()) {
-                            maze.start -> {
-                                setStartCell()
-                            }
-                            maze.goal -> {
-                                setGoalCell()
-                            }
-                            in path -> {
-
-                                val index = path.indexOf(point)
-                                val predecessor = path.getOrElse(index - 1) { maze.start }
-
-                                val stepImage = when {
-                                    point.isAbove(predecessor) -> STEP_UP
-                                    point.isRightTo(predecessor) -> STEP_RIGHT
-                                    point.isLeftTo(predecessor) -> STEP_LEFT
-                                    point.isBelow(predecessor) -> STEP_DOWN
-                                    else -> null
-                                }
-
-                                image(stepImage, responsive = true, centered = true, classes = setOf("p-3"))
-                                //dot(Color.name(Col.GRAY))
-                            }
+                            maze.start -> setStartCell()
+                            maze.goal -> setGoalCell()
+                            in path -> setPathCell(path, point)
                         }
                     }
 
@@ -78,6 +56,25 @@ fun Container.mazePanel(maze: MazeDto) {
 
         }
     }
+}
+
+private fun Div.setPathCell(
+    path: List<Point2D>,
+    point: Point2D
+) {
+
+    val index = path.indexOf(point)
+    val predecessor = path[index - 1]
+
+    val stepImage = when {
+        point.isAbove(predecessor) -> STEP_UP
+        point.isRightTo(predecessor) -> STEP_RIGHT
+        point.isLeftTo(predecessor) -> STEP_LEFT
+        point.isBelow(predecessor) -> STEP_DOWN
+        else -> null
+    }
+
+    image(stepImage, responsive = true, centered = true, classes = setOf("p-3"))
 }
 
 private fun Div.setGoalCell() {
