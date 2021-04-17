@@ -57,7 +57,7 @@ fun Container.generatorSettings(generators: Entities) {
 
 private fun Div.getFormPanel(generators: Entities) = formPanel<GeneratorForm> {
 
-    val generatorStringPairs = generators.entities.map { StringPair(it.id.toString(), it.name) }
+    val generatorStringPairs = generators.entities.map { StringPair(it.id.toString(), it.name) }.sortedBy { it.second }
     val default = generators.default?.toString() ?: generatorStringPairs.firstOrNull()?.first
 
     add(

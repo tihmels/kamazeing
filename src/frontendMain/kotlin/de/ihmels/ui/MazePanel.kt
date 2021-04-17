@@ -3,16 +3,16 @@ package de.ihmels.ui
 import de.ihmels.*
 import io.kvision.core.*
 import io.kvision.core.Display.INLINEGRID
-import io.kvision.html.Div
-import io.kvision.html.Span
-import io.kvision.html.div
-import io.kvision.html.span
+import io.kvision.html.*
 import io.kvision.panel.gridPanel
 import io.kvision.state.bind
 import io.kvision.state.sub
 import io.kvision.utils.px
 
 const val cellSize = 50
+
+const val START_IMG = "go.png"
+const val GOAL_IMG = "flag.png"
 
 val cellBorder = Border(1.px, BorderStyle.SOLID, Color.hex(0xA0A0A0))
 
@@ -41,10 +41,10 @@ fun Container.mazePanel(maze: MazeDto) {
 
                         when {
                             cell.toPoint2D() == maze.start -> {
-                                dot(Color.name(Col.BLACK)).setDragDropData("text/plain", "start")
+                                image(START_IMG, responsive = true, centered = true, classes = setOf("p-2")).setDragDropData("text/plain", "start")
                             }
                             cell.toPoint2D() == maze.goal -> {
-                                dot(Color.name(Col.GREEN)).setDragDropData("text/plain", "goal")
+                                image(GOAL_IMG, responsive = true, centered = true, classes = setOf("p-2")).setDragDropData("text/plain", "goal")
                             }
                             cell.toPoint2D() in path -> {
                                 dot(Color.name(Col.GRAY))

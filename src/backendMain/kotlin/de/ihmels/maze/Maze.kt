@@ -30,7 +30,7 @@ class Maze(
         if (s in this) s else topLeft(this)
     }
 
-    val goal: Point2D by lazy {
+    private val goal: Point2D by lazy {
         val g = goalInitializer(this)
         if (g in this) g else bottomRight(this)
     }

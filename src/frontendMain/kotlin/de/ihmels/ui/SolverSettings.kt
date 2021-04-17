@@ -54,7 +54,7 @@ fun Container.solverSettings(solvers: Entities) {
 
 private fun Div.getFormPanel(solvers: Entities) = formPanel<SolverForm> {
 
-    val solverStringPairs = solvers.entities.map { StringPair(it.id.toString(), it.name) }
+    val solverStringPairs = solvers.entities.map { StringPair(it.id.toString(), it.name) }.sortedBy { it.second }
     val default = solvers.default?.toString() ?: solverStringPairs.firstOrNull()?.first
 
     add(SolverForm::selectedSolver, Select(solverStringPairs, value = default))
