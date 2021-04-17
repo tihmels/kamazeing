@@ -64,17 +64,36 @@ private fun Div.setPathCell(
 ) {
 
     val index = path.indexOf(point)
-    val predecessor = path[index - 1]
 
-    val stepImage = when {
-        point.isAbove(predecessor) -> STEP_UP
-        point.isRightTo(predecessor) -> STEP_RIGHT
-        point.isLeftTo(predecessor) -> STEP_LEFT
-        point.isBelow(predecessor) -> STEP_DOWN
-        else -> null
+    val predecessor = path.getOrElse(index - 1) { path[0] }
+    val successor = path.getOrNull(index + 1)
+
+    if (successor != null) {
+
+        val stepImage = when {
+            successor.isAbove(point) -> STEP_UP
+            successor.isRightTo(point) -> STEP_RIGHT
+            successor.isLeftTo(point) -> STEP_LEFT
+            successor.isBelow(point) -> STEP_DOWN
+            else -> null
+        }
+
+        image(stepImage, responsive = true, centered = true, classes = setOf("p-3"))
+
+    } else {
+        val stepImage = when {
+            point.isAbove(predecessor) -> STEP_UP
+            point.isRightTo(predecessor) -> STEP_RIGHT
+            point.isLeftTo(predecessor) -> STEP_LEFT
+            point.isBelow(predecessor) -> STEP_DOWN
+            else -> null
+        }
+
+        image(stepImage, responsive = true, centered = true, classes = setOf("p-3"))
+
     }
 
-    image(stepImage, responsive = true, centered = true, classes = setOf("p-3"))
+
 }
 
 private fun Div.setGoalCell() {
