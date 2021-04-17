@@ -68,9 +68,9 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
 
     private fun setSolverSpeed(speed: Int) {
         when (speed) {
-            1 -> solverDelay = 300L
-            2 -> solverDelay = 150L
-            3 -> solverDelay = 50L
+            1 -> solverDelay = 350L
+            2 -> solverDelay = 200L
+            3 -> solverDelay = 100L
         }
     }
 

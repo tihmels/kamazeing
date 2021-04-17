@@ -13,6 +13,7 @@ import io.kvision.panel.flexPanel
 import io.kvision.panel.root
 import io.kvision.require
 import io.kvision.startApplication
+import io.kvision.state.ObservableState
 import io.kvision.state.bind
 import io.kvision.state.sub
 import io.kvision.utils.perc
@@ -90,10 +91,8 @@ private fun Container.appView() {
 
     div(classes = setOf("row", "no-gutter")) {
 
-        div(className = "col").bind(mazeState) {
-            if (it != null) {
-                mazePanel(it)
-            }
+        div(className = "col").bindNotNull(mazeState) {
+            mazePanel(it)
         }
 
         div(classes = setOf("col", "col-3")) {
@@ -144,4 +143,20 @@ private fun Container.disconnectedView() {
 
 fun main() {
     startApplication(::App, module.hot)
+}
+
+fun <S, W : Component> W.bindNotNull(
+    observableState: ObservableState<S?>,
+    removeChildren: Boolean = true,
+    factory: (W.(S) -> Unit)
+): W {
+    this.addBeforeDisposeHook(observableState.subscribe {
+        if (it != null) {
+            this.singleRenderAsync {
+                if (removeChildren) (this as? Container)?.disposeAll()
+                factory(it)
+            }
+        }
+    })
+    return this
 }
