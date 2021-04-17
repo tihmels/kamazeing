@@ -65,7 +65,8 @@ data class MazeProperties(
     val rows: Int? = null,
     val columns: Int? = null,
     val start: Point2D? = null,
-    val goal: Point2D? = null
+    val goal: Point2D? = null,
+    val initializer: Int? = null
 )
 
 @Serializable
@@ -80,6 +81,12 @@ sealed class CMessageType {
         @Serializable
         data class Generate(val generatorId: Int) : GeneratorAction()
 
+        @Serializable
+        data class SetSpeed(val speed: Int): GeneratorAction()
+
+        @Serializable
+        object Cancel: GeneratorAction()
+
     }
 
     @Serializable
@@ -87,6 +94,12 @@ sealed class CMessageType {
 
         @Serializable
         data class Solve(val solverId: Int) : SolverAction()
+
+        @Serializable
+        data class SetSpeed(val speed: Int): SolverAction()
+
+        @Serializable
+        object Cancel: SolverAction()
 
     }
 

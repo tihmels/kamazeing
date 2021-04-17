@@ -25,8 +25,6 @@ fun Container.sidebarCard(title: String, collapsible: Boolean = false, init: Div
 
     div(classes = setOf("card", "my-2")) {
 
-        width = 280.px
-
         div(className = "card-header") {
             content = title
 

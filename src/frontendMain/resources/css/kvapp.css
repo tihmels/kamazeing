@@ -14,3 +14,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.flex-one {
+    flex: 1;
+}
+
+.no-label > label {
+    display: none;
+}

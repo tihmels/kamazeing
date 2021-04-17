@@ -6,36 +6,52 @@ import de.ihmels.Entities
 import de.ihmels.GeneratorState
 import de.ihmels.StateService
 import io.kvision.core.Container
+import io.kvision.core.JustifyContent
 import io.kvision.core.StringPair
+import io.kvision.form.check.RadioGroup
 import io.kvision.form.formPanel
 import io.kvision.form.select.Select
+import io.kvision.html.ButtonStyle
 import io.kvision.html.Div
 import io.kvision.html.button
+import io.kvision.panel.hPanel
 import io.kvision.state.bind
 import io.kvision.state.sub
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GeneratorForm(val selectedGenerator: String)
+data class GeneratorForm(val selectedGenerator: String, val speed: String)
 
 fun Container.generatorSettings(generators: Entities) {
 
     sidebarCard("Generator") {
 
-        val form = getFormPanel(generators)
+        StateService.generatorForm = getFormPanel(generators)
 
         val generatorState = StateService.mazeState.sub { it.generatorState }
 
-        button("Generate").onClick {
+        hPanel(justify = JustifyContent.STRETCH, spacing = 5, noWrappers = true) {
 
-            val generator = form.getData().selectedGenerator.toInt()
-            AppService.Request.generatorAction(GeneratorAction.Generate(generator))
+            button("Cancel", style = ButtonStyle.DANGER, className = "flex-one").onClick {
 
-        }.bind(generatorState) {
-            disabled = it == GeneratorState.RUNNING
+                AppService.Request.generatorAction(GeneratorAction.Cancel)
+
+            }.bind(generatorState) {
+                disabled = it == GeneratorState.IDLE
+            }
+
+            button("Generate", className = "flex-one").onClick {
+
+                val generatorId = StateService.generatorForm.getData().selectedGenerator.toInt()
+                AppService.Request.generatorAction(GeneratorAction.Generate(generatorId))
+
+            }.bind(generatorState) {
+                disabled = it == GeneratorState.RUNNING
+            }
         }
 
     }
+
 
 }
 
@@ -46,7 +62,24 @@ private fun Div.getFormPanel(generators: Entities) = formPanel<GeneratorForm> {
 
     add(
         GeneratorForm::selectedGenerator,
-        Select(generatorStringPairs, value = default, label = "Select Generator")
+        Select(generatorStringPairs, value = default)
+    )
+
+    add(
+        GeneratorForm::speed, RadioGroup(
+            listOf("1" to "Slow", "2" to "Medium", "3" to "Fast"),
+            inline = true,
+            value = "1",
+        ) {
+
+            addCssClass("no-label")
+
+            subscribe {
+                if (!it.isNullOrBlank()) {
+                    AppService.Request.updateGeneratorSpeed(it.toInt())
+                }
+            }
+        }
     )
 
 }

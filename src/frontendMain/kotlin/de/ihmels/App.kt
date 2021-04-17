@@ -59,11 +59,18 @@ private fun Container.header(connected: Boolean) {
 
                     height = 100.perc
 
-                    button("Settings").onClick {
+                    button("Settings") {
+                        title = "Change maze dimensions"
+                        enableTooltip()
+                    }.onClick {
+
                         SettingsModal().show()
                     }
 
-                    button("Reset").onClick {
+                    button("Reset") {
+                        title = "Resets all cells"
+                        enableTooltip()
+                    }.onClick {
                         AppService.Request.resetMaze()
                     }
                 }
@@ -84,10 +91,12 @@ private fun Container.appView() {
     div(classes = setOf("row", "no-gutter")) {
 
         div(className = "col").bind(mazeState) {
-            mazePanel(it)
+            if (it != null) {
+                mazePanel(it)
+            }
         }
 
-        div(classes = setOf("col", "col-auto")) {
+        div(classes = setOf("col", "col-3")) {
 
             val generatorStore = StateService.mazeState.sub { it.generatorAlgorithms }
             val solverStore = StateService.mazeState.sub { it.solverAlgorithms }

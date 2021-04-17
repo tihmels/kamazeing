@@ -2,6 +2,8 @@ package de.ihmels.ws
 
 import de.ihmels.MazeProperties
 import de.ihmels.maze.Maze
+import de.ihmels.maze.bottomRight
+import de.ihmels.maze.topLeft
 
 sealed class Intent<T> {
 
@@ -21,8 +23,8 @@ sealed class Intent<T> {
             val newMaze = Maze(
                 properties.rows ?: oldMaze.rows,
                 properties.columns ?: oldMaze.columns,
-                properties.start?.let { { _ -> it } } ?: { oldMaze.start },
-                properties.goal?.let { { _ -> it } } ?: { oldMaze.goal })
+                properties.start?.let { { _ -> it } } ?: topLeft,
+                properties.goal?.let { { _ -> it } } ?: bottomRight)
 
             if (newMaze.dimensions == oldMaze.dimensions) {
                 newMaze.grid = oldMaze.grid

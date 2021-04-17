@@ -16,48 +16,45 @@ const val cellSize = 50
 
 val cellBorder = Border(1.px, BorderStyle.SOLID, Color.hex(0xA0A0A0))
 
-fun Container.mazePanel(maze: MazeDto?) {
+fun Container.mazePanel(maze: MazeDto) {
 
-    maze?.let {
+    gridPanel {
 
-        gridPanel {
+        marginBottom = 15.px
 
-            marginBottom = 15.px
+        display = INLINEGRID
 
-            display = INLINEGRID
+        gridAutoRows = "1fr"
+        gridTemplateColumns = "repeat(${maze.columns}, ${cellSize}px)"
 
-            gridAutoRows = "1fr"
-            gridTemplateColumns = "repeat(${it.columns}, ${cellSize}px)"
+        border = cellBorder
 
-            border = cellBorder
+        val pathStore = StateService.mazeState.sub { it.solutionPath }
 
-            val pathStore = StateService.mazeState.sub { it.solutionPath }
+        bind(pathStore) { path ->
 
-            bind(pathStore) { path ->
+            for (cell in maze.grid) {
 
-                for (cell in maze.grid) {
+                options(rowStart = cell.row + 1, columnStart = cell.column + 1) {
 
-                    options(rowStart = cell.row + 1, columnStart = cell.column + 1) {
+                    cell(cell) {
 
-                        cell(cell) {
-
-                            when {
-                                cell.toPoint2D() == maze.start -> {
-                                    dot(Color.name(Col.BLACK)).setDragDropData("text/plain", "start")
-                                }
-                                cell.toPoint2D() == maze.goal -> {
-                                    dot(Color.name(Col.GREEN)).setDragDropData("text/plain", "goal")
-                                }
-                                cell.toPoint2D() in path -> {
-                                    dot(Color.name(Col.GRAY))
-                                }
+                        when {
+                            cell.toPoint2D() == maze.start -> {
+                                dot(Color.name(Col.BLACK)).setDragDropData("text/plain", "start")
+                            }
+                            cell.toPoint2D() == maze.goal -> {
+                                dot(Color.name(Col.GREEN)).setDragDropData("text/plain", "goal")
+                            }
+                            cell.toPoint2D() in path -> {
+                                dot(Color.name(Col.GRAY))
                             }
                         }
-
                     }
-                }
 
+                }
             }
+
         }
     }
 }
@@ -86,9 +83,9 @@ fun Container.cell(cell: CellDto, init: Div.() -> Unit) {
 
         setDropTargetData("text/plain") { data ->
             if (data == "start") {
-                AppService.Request.updateMaze(start = cell.toPoint2D())
+                AppService.Request.updateMaze(start = cell.toPoint2D(), goal = StateService.mazeState.getState().maze?.goal)
             } else if (data == "goal") {
-                AppService.Request.updateMaze(goal = cell.toPoint2D())
+                AppService.Request.updateMaze(goal = cell.toPoint2D(), start = StateService.mazeState.getState().maze?.start)
             }
         }
     }

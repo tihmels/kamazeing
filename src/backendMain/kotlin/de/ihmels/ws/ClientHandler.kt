@@ -1,11 +1,8 @@
 package de.ihmels.ws
 
-import de.ihmels.CMessageType
+import de.ihmels.*
 import de.ihmels.CMessageType.*
-import de.ihmels.Entities
-import de.ihmels.Logging
 import de.ihmels.SMessageType.*
-import de.ihmels.logger
 import de.ihmels.maze.generator.factory.Generator
 import de.ihmels.maze.solver.factory.Solver
 import de.ihmels.maze.solver.toList
@@ -13,6 +10,7 @@ import de.ihmels.skippable.GeneratorStateFlow
 import de.ihmels.skippable.SolverStateFlow
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlin.reflect.KMutableProperty0
 
 class ClientHandler(private val client: Client) : Logging, ClientMessageHandler {
 
@@ -29,6 +27,9 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
 
     private val generatorManager = GeneratorStateFlow()
     private val solverManager = SolverStateFlow()
+
+    private var generatorDelay = 300L
+    private var solverDelay = 300L
 
     suspend fun start() {
 
@@ -49,13 +50,41 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
             GetGeneratorAlgorithms -> sendGeneratorAlgorithms()
             GetSolverAlgorithms -> sendSolverAlgorithms()
             ResetMazeGrid -> resetMaze()
-            is UpdateMazeProperties -> updateProperties(cMessage)
+            is UpdateMazeProperties -> updateMazeProperties(cMessage.properties)
             is GeneratorAction.Generate -> generate(cMessage)
+            is GeneratorAction.Cancel -> cancelGenerator()
+            is GeneratorAction.SetSpeed -> setGeneratorSpeed(cMessage.speed)
             is SolverAction.Solve -> solve(cMessage)
+            is SolverAction.Cancel -> cancelSolver()
+            is SolverAction.SetSpeed -> setSolverSpeed(cMessage.speed)
             else -> {
                 throw IllegalStateException()
             }
         }
+
+    private fun cancelSolver() {
+        solverJob?.cancel()
+    }
+
+    private fun setSolverSpeed(speed: Int) {
+        when (speed) {
+            1 -> solverDelay = 300L
+            2 -> solverDelay = 150L
+            3 -> solverDelay = 50L
+        }
+    }
+
+    private fun setGeneratorSpeed(speed: Int) {
+        when (speed) {
+            1 -> generatorDelay = 300L
+            2 -> generatorDelay = 150L
+            3 -> generatorDelay = 50L
+        }
+    }
+
+    private fun cancelGenerator() {
+        generatorJob?.cancel()
+    }
 
     private suspend fun sendGeneratorAlgorithms() =
         client.send(Generators(Entities(Generator.toEntities(), Generator.default().id)))
@@ -73,13 +102,20 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
 
     }
 
-    private suspend fun updateProperties(message: UpdateMazeProperties) = clearScope(scope) {
+    private suspend fun updateMazeProperties(properties: MazeProperties) = clearScope(scope) {
 
-        val newState = Intent.UpdateMazeProperties(message.properties).reduce(_store.value)
+        var updatedState = Intent.UpdateMazeProperties(properties).reduce(_store.value)
 
-        _store.value = newState
+        properties.initializer?.let {
+            updatedState = Intent.ResetMaze.reduce(updatedState)
 
-        client.send(UpdateMaze(newState.maze.toDto()))
+            val flow = generatorManager.generate(updatedState.maze, it)
+            updatedState = Intent.UpdateMaze(flow.toList().last()).reduce(updatedState)
+        }
+
+        _store.value = updatedState
+
+        client.send(UpdateMaze(updatedState.maze.toDto()))
 
     }
 
@@ -92,7 +128,7 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
         val flow = generatorManager.generate(newState.maze, message.generatorId)
 
         generatorJob = flow
-            .delay(100)
+            .delay(::generatorDelay)
             .onEach {
                 _store.value = Intent.UpdateMaze(it).reduce(_store.value)
                 client.send(UpdateMaze(it.toDto()))
@@ -111,7 +147,7 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
 
             solverJob = flow
                 .mapNotNull { it?.toList() }
-                .delay(200)
+                .delay(::solverDelay)
                 .onEach {
                     client.send(UpdatePath(it))
                 }
@@ -140,9 +176,9 @@ suspend fun clearScope(scope: CoroutineScope, block: suspend () -> Unit) {
     block()
 }
 
-fun <T> Flow<T>.delay(time: Long): Flow<T> = flow {
+fun <T> Flow<T>.delay(time: KMutableProperty0<Long>): Flow<T> = flow {
     collect { value ->
-        kotlinx.coroutines.delay(time)
+        delay(time.get())
         emit(value)
     }
 }

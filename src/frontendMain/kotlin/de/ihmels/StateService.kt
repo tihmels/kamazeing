@@ -1,5 +1,7 @@
 package de.ihmels
 
+import de.ihmels.ui.GeneratorForm
+import io.kvision.form.FormPanel
 import io.kvision.redux.RAction
 import io.kvision.redux.createReduxStore
 
@@ -16,6 +18,8 @@ data class ClientState(
 object StateService {
 
     val mazeState = createReduxStore(::gridReducer, ClientState())
+
+    var generatorForm: FormPanel<GeneratorForm> = FormPanel()
 
     sealed class StateAction : RAction {
         data class UpdateMaze(val maze: MazeDto) : StateAction()

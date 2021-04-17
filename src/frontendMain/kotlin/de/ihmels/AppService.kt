@@ -58,8 +58,9 @@ object AppService {
             rows: Int? = null,
             columns: Int? = null,
             start: Point2D? = null,
-            goal: Point2D? = null
-        ) = websocketHandler.send(UpdateMazeProperties(MazeProperties(rows, columns, start, goal)))
+            goal: Point2D? = null,
+            initialized: Int? = null,
+        ) = websocketHandler.send(UpdateMazeProperties(MazeProperties(rows, columns, start, goal, initialized)))
 
         fun generatorAction(action: GeneratorAction) =
             websocketHandler.send(action)
@@ -69,6 +70,15 @@ object AppService {
         fun getGeneratorAlgorithms() = websocketHandler.send(GetGeneratorAlgorithms)
 
         fun getSolverAlgorithms() = websocketHandler.send(GetSolverAlgorithms)
+
+        fun updateGeneratorSpeed(speed: Int) {
+            websocketHandler.send(GeneratorAction.SetSpeed(speed))
+        }
+
+        fun updateSolverSpeed(speed: Int) {
+            websocketHandler.send(SolverAction.SetSpeed(speed))
+
+        }
 
     }
 
