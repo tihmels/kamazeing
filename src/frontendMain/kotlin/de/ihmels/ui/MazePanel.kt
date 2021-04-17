@@ -1,6 +1,9 @@
 package de.ihmels.ui
 
-import de.ihmels.*
+import de.ihmels.AppService
+import de.ihmels.CellDto
+import de.ihmels.MazeDto
+import de.ihmels.StateService
 import io.kvision.core.*
 import io.kvision.core.Display.INLINEGRID
 import io.kvision.html.*
@@ -13,6 +16,11 @@ const val cellSize = 50
 
 const val START_IMG = "go.png"
 const val GOAL_IMG = "flag.png"
+
+const val STEP_UP = "step-up.png"
+const val STEP_RIGHT = "step-right.png"
+const val STEP_DOWN = "step-down.png"
+const val STEP_LEFT = "step-left.png"
 
 val cellBorder = Border(1.px, BorderStyle.SOLID, Color.hex(0xA0A0A0))
 
@@ -39,15 +47,28 @@ fun Container.mazePanel(maze: MazeDto) {
 
                     cell(cell) {
 
-                        when {
-                            cell.toPoint2D() == maze.start -> {
-                                image(START_IMG, responsive = true, centered = true, classes = setOf("p-2")).setDragDropData("text/plain", "start")
+                        when (val point = cell.toPoint2D()) {
+                            maze.start -> {
+                                setStartCell()
                             }
-                            cell.toPoint2D() == maze.goal -> {
-                                image(GOAL_IMG, responsive = true, centered = true, classes = setOf("p-2")).setDragDropData("text/plain", "goal")
+                            maze.goal -> {
+                                setGoalCell()
                             }
-                            cell.toPoint2D() in path -> {
-                                dot(Color.name(Col.GRAY))
+                            in path -> {
+
+                                val index = path.indexOf(point)
+                                val predecessor = path.getOrElse(index - 1) { maze.start }
+
+                                val stepImage = when {
+                                    point.isAbove(predecessor) -> STEP_UP
+                                    point.isRightTo(predecessor) -> STEP_RIGHT
+                                    point.isLeftTo(predecessor) -> STEP_LEFT
+                                    point.isBelow(predecessor) -> STEP_DOWN
+                                    else -> null
+                                }
+
+                                image(stepImage, responsive = true, centered = true, classes = setOf("p-3"))
+                                //dot(Color.name(Col.GRAY))
                             }
                         }
                     }
@@ -57,6 +78,24 @@ fun Container.mazePanel(maze: MazeDto) {
 
         }
     }
+}
+
+private fun Div.setGoalCell() {
+    image(
+        GOAL_IMG,
+        responsive = true,
+        centered = true,
+        classes = setOf("p-2")
+    ).setDragDropData("text/plain", "goal")
+}
+
+private fun Div.setStartCell() {
+    image(
+        START_IMG,
+        responsive = true,
+        centered = true,
+        classes = setOf("p-2")
+    ).setDragDropData("text/plain", "start")
 }
 
 fun Container.cell(cell: CellDto, init: Div.() -> Unit) {
@@ -82,10 +121,16 @@ fun Container.cell(cell: CellDto, init: Div.() -> Unit) {
         }
 
         setDropTargetData("text/plain") { data ->
-            if (data == "start") {
-                AppService.Request.updateMaze(start = cell.toPoint2D(), goal = StateService.mazeState.getState().maze?.goal)
-            } else if (data == "goal") {
-                AppService.Request.updateMaze(goal = cell.toPoint2D(), start = StateService.mazeState.getState().maze?.start)
+            if (data == "start" && StateService.mazeState.getState().maze?.start != cell.toPoint2D()) {
+                AppService.Request.updateMaze(
+                    start = cell.toPoint2D(),
+                    goal = StateService.mazeState.getState().maze?.goal
+                )
+            } else if (data == "goal" && StateService.mazeState.getState().maze?.goal != cell.toPoint2D()) {
+                AppService.Request.updateMaze(
+                    goal = cell.toPoint2D(),
+                    start = StateService.mazeState.getState().maze?.start
+                )
             }
         }
     }

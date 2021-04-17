@@ -5,6 +5,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 open class Point2D(val row: Int, val column: Int) {
 
+    fun isAbove(point: Point2D) = point.row == row + 1 && point.column == column
+
+    fun isBelow(point: Point2D) = point.row == row - 1 && point.column == column
+
+    fun isLeftTo(point: Point2D) = point.column == column + 1 && point.row == row
+
+    fun isRightTo(point: Point2D) = point.column == column - 1 && point.row == row
+
     override fun toString(): String {
         return "Point[$row:$column]"
     }
@@ -82,10 +90,10 @@ sealed class CMessageType {
         data class Generate(val generatorId: Int) : GeneratorAction()
 
         @Serializable
-        data class SetSpeed(val speed: Int): GeneratorAction()
+        data class SetSpeed(val speed: Int) : GeneratorAction()
 
         @Serializable
-        object Cancel: GeneratorAction()
+        object Cancel : GeneratorAction()
 
     }
 
@@ -96,10 +104,10 @@ sealed class CMessageType {
         data class Solve(val solverId: Int) : SolverAction()
 
         @Serializable
-        data class SetSpeed(val speed: Int): SolverAction()
+        data class SetSpeed(val speed: Int) : SolverAction()
 
         @Serializable
-        object Cancel: SolverAction()
+        object Cancel : SolverAction()
 
     }
 
