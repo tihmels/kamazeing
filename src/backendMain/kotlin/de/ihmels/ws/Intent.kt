@@ -1,7 +1,9 @@
 package de.ihmels.ws
 
 import de.ihmels.MazeProperties
+import de.ihmels.Point2D
 import de.ihmels.maze.Maze
+import de.ihmels.maze.solver.Node
 
 sealed class Intent<T> {
 
@@ -30,6 +32,38 @@ sealed class Intent<T> {
 
             return old.copy(maze = newMaze, initialized = newMaze.cells.none { it.isClosed() })
 
+        }
+
+    }
+
+    data class UpdatePath(val path: Node<Point2D>) : Intent<ClientState>() {
+        override fun reduce(old: ClientState): ClientState {
+            return old.copy(path = path)
+        }
+    }
+
+    data class UpdateGeneratorSpeed(val speed: Int) : Intent<ClientState>() {
+        override fun reduce(old: ClientState): ClientState {
+            val delay = when (speed) {
+                1 -> 350L
+                2 -> 200L
+                3 -> 100L
+                else -> 100L
+            }
+            return old.copy(generatorDelay = delay)
+        }
+
+    }
+
+    data class UpdateSolverSpeed(val speed: Int) : Intent<ClientState>() {
+        override fun reduce(old: ClientState): ClientState {
+            val delay = when (speed) {
+                1 -> 300L
+                2 -> 150L
+                3 -> 50L
+                else -> 350L
+            }
+            return old.copy(solverDelay = delay)
         }
 
     }

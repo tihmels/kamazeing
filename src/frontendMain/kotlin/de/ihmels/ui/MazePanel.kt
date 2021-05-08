@@ -3,6 +3,8 @@ package de.ihmels.ui
 import de.ihmels.*
 import io.kvision.core.*
 import io.kvision.core.Display.INLINEGRID
+import io.kvision.dropdown.cmLink
+import io.kvision.dropdown.contextMenu
 import io.kvision.html.*
 import io.kvision.panel.gridPanel
 import io.kvision.state.bind
@@ -19,15 +21,11 @@ const val STEP_RIGHT = "step-right.png"
 const val STEP_DOWN = "step-down.png"
 const val STEP_LEFT = "step-left.png"
 
-val cellBorder = Border(1.px, BorderStyle.SOLID, Color.hex(0xA0A0A0))
+val cellBorder = Border(1.px, BorderStyle.SOLID, Color.hex(0x606060))
 
 fun Container.mazePanel(maze: MazeDto) {
 
     gridPanel {
-
-        addCssClass("maze-grid")
-
-        marginBottom = 15.px
 
         display = INLINEGRID
 
@@ -51,11 +49,18 @@ fun Container.mazePanel(maze: MazeDto) {
                             maze.goal -> setGoalCell()
                             in path -> setPathCell(path, point)
                         }
-                    }
 
+//                        contextMenu {
+//                            cmLink("Start").onClick {
+//                                AppService.Request.updateMaze(start = cell.toPoint2D())
+//                            }
+//                            cmLink("Goal").onClick {
+//                                AppService.Request.updateMaze(goal = cell.toPoint2D())
+//                            }
+//                        }
+                    }
                 }
             }
-
         }
     }
 }
@@ -118,7 +123,7 @@ private fun Div.setStartCell() {
 }
 
 fun Container.cell(cell: CellDto, init: Div.() -> Unit) {
-    div {
+    div(className = "maze-cell") {
 
         position = Position.RELATIVE
 
@@ -154,8 +159,3 @@ fun Container.cell(cell: CellDto, init: Div.() -> Unit) {
         }
     }
 }
-
-fun Container.dot(color: Color): Span =
-    span(className = "dot") {
-        background = Background(color)
-    }

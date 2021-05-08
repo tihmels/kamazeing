@@ -44,8 +44,9 @@ class SettingsModal : Modal(caption = "Maze Settings") {
             AppService.Request.updateMaze(
                 rows = formData.rows,
                 columns = formData.columns,
-                initialized = initializer
+                initialized = initializer ?: -1
             )
+
             this@SettingsModal.hide()
         }
 

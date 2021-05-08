@@ -1,30 +1,14 @@
 package de.ihmels.skippable
 
-import de.ihmels.GeneratorState
 import de.ihmels.maze.Maze
 import de.ihmels.maze.generator.factory.Generator
 import de.ihmels.maze.generator.factory.GeneratorFactoryImpl
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 
-class GeneratorStateFlow {
+class GeneratorStateFlow(scope: CoroutineScope) : MazeFlowExecutor<Maze>(scope) {
 
-    private val _state = MutableStateFlow(GeneratorState.IDLE)
-    val state = _state.asStateFlow()
-
-    fun generate(maze: Maze, generatorId: Int): Flow<Maze> {
-
-        val generator = getGenerator(generatorId)
-
-        return generator.generate(maze)
-            .onStart {
-                _state.value = GeneratorState.RUNNING
-            }
-            .onCompletion {
-                _state.value = GeneratorState.IDLE
-            }
-    }
-
-    private fun getGenerator(id: Int) =
-        GeneratorFactoryImpl.createGenerator(enumValues<Generator>().getOrElse(id) { Generator.default() })
+    override fun getMazeFlowProvider(id: Int): (Maze) -> Flow<Maze> =
+        GeneratorFactoryImpl.createGenerator(Generator.getGeneratorById(id))::generate
 
 }

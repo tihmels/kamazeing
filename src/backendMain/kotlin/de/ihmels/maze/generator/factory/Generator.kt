@@ -12,6 +12,7 @@ enum class Generator(val id: Int, private val descriptor: String) {
 
     companion object {
         fun toEntities() = values().map { IdAndName(it.id, it.descriptor) }
+        fun getGeneratorById(id: Int) = values().find { it.id == id } ?: default()
         fun default() = ALDOUS_BRODER
     }
 

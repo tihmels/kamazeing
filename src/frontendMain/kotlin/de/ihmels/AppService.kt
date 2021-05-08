@@ -59,7 +59,7 @@ object AppService {
             columns: Int? = null,
             start: Point2D? = null,
             goal: Point2D? = null,
-            initialized: Int? = null,
+            initialized: Int = -1,
         ) = websocketHandler.send(UpdateMazeProperties(MazeProperties(rows, columns, start, goal, initialized)))
 
         fun generatorAction(action: GeneratorAction) =

@@ -1,10 +1,7 @@
 package de.ihmels.ui
 
-import de.ihmels.AppService
+import de.ihmels.*
 import de.ihmels.CMessageType.GeneratorAction
-import de.ihmels.Entities
-import de.ihmels.GeneratorState
-import de.ihmels.StateService
 import io.kvision.core.Container
 import io.kvision.core.JustifyContent
 import io.kvision.core.StringPair
@@ -37,7 +34,7 @@ fun Container.generatorSettings(generators: Entities) {
                 AppService.Request.generatorAction(GeneratorAction.Cancel)
 
             }.bind(generatorState) {
-                disabled = it == GeneratorState.IDLE
+                disabled = it == FlowState.IDLE
             }
 
             button("Generate", className = "flex-one").onClick {
@@ -46,7 +43,7 @@ fun Container.generatorSettings(generators: Entities) {
                 AppService.Request.generatorAction(GeneratorAction.Generate(generatorId))
 
             }.bind(generatorState) {
-                disabled = it == GeneratorState.RUNNING
+                disabled = it == FlowState.RUNNING
             }
         }
 

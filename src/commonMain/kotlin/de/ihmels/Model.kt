@@ -59,12 +59,7 @@ data class Entities(val entities: List<IdAndName> = emptyList(), val default: In
 data class MazeDto(val rows: Int, val columns: Int, val start: Point2D, val goal: Point2D, val grid: List<CellDto>)
 
 @Serializable
-enum class SolverState {
-    IDLE, RUNNING
-}
-
-@Serializable
-enum class GeneratorState {
+enum class FlowState {
     IDLE, RUNNING
 }
 
@@ -74,7 +69,7 @@ data class MazeProperties(
     val columns: Int? = null,
     val start: Point2D? = null,
     val goal: Point2D? = null,
-    val initializer: Int? = null
+    val initializer: Int = -1
 )
 
 @Serializable
@@ -134,10 +129,10 @@ data class SMessage(val messageType: SMessageType)
 sealed class SMessageType {
 
     @Serializable
-    data class UpdateGeneratorState(val state: GeneratorState) : SMessageType()
+    data class UpdateGeneratorState(val state: FlowState) : SMessageType()
 
     @Serializable
-    data class UpdateSolverState(val state: SolverState) : SMessageType()
+    data class UpdateSolverState(val state: FlowState) : SMessageType()
 
     @Serializable
     data class ResetMaze(val maze: MazeDto) : SMessageType()

@@ -17,19 +17,17 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
     private val log = logger()
 
     private val supervisorJob = SupervisorJob()
-    private var generatorJob: Job? = null
-    private var solverJob: Job? = null
 
     private val scope = CoroutineScope(supervisorJob + Dispatchers.Default)
 
     private val _store = MutableStateFlow(ClientState())
     private val store = _store.asStateFlow()
 
-    private val generatorManager = GeneratorStateFlow()
-    private val solverManager = SolverStateFlow()
+    private val generator = GeneratorStateFlow(scope)
+    private val solver = SolverStateFlow(scope)
 
-    private var generatorDelay = 300L
-    private var solverDelay = 300L
+    private var generatorDelay: Long = 300L
+    private var solverDelay: Long = 300L
 
     suspend fun start() {
 
@@ -52,38 +50,22 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
             ResetMazeGrid -> resetMaze()
             is UpdateMazeProperties -> updateMazeProperties(cMessage.properties)
             is GeneratorAction.Generate -> generate(cMessage)
-            is GeneratorAction.Cancel -> cancelGenerator()
+            is GeneratorAction.Cancel -> generator.cancel()
             is GeneratorAction.SetSpeed -> setGeneratorSpeed(cMessage.speed)
             is SolverAction.Solve -> solve(cMessage)
-            is SolverAction.Cancel -> cancelSolver()
+            is SolverAction.Cancel -> solver.cancel()
             is SolverAction.SetSpeed -> setSolverSpeed(cMessage.speed)
             else -> {
                 throw IllegalStateException()
             }
         }
 
-    private fun cancelSolver() {
-        solverJob?.cancel()
-    }
-
     private fun setSolverSpeed(speed: Int) {
-        when (speed) {
-            1 -> solverDelay = 350L
-            2 -> solverDelay = 200L
-            3 -> solverDelay = 100L
-        }
+        _store.value = Intent.UpdateGeneratorSpeed(speed).reduce(store.value)
     }
 
     private fun setGeneratorSpeed(speed: Int) {
-        when (speed) {
-            1 -> generatorDelay = 300L
-            2 -> generatorDelay = 150L
-            3 -> generatorDelay = 50L
-        }
-    }
-
-    private fun cancelGenerator() {
-        generatorJob?.cancel()
+        _store.value = Intent.UpdateSolverSpeed(speed).reduce(store.value)
     }
 
     private suspend fun sendGeneratorAlgorithms() =
@@ -106,10 +88,10 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
 
         var updatedState = Intent.UpdateMazeProperties(properties).reduce(_store.value)
 
-        properties.initializer?.let {
+        if (properties.initializer > -1) {
             updatedState = Intent.ResetMaze.reduce(updatedState)
 
-            val flow = generatorManager.generate(updatedState.maze, it)
+            val flow = generator.getFlow(updatedState.maze, properties.initializer)
             updatedState = Intent.UpdateMaze(flow.toList().last()).reduce(updatedState)
         }
 
@@ -125,33 +107,30 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
 
         _store.value = newState
 
-        val flow = generatorManager.generate(newState.maze, message.generatorId)
-
-        generatorJob = flow
-            .delay(::generatorDelay)
-            .onEach {
-                _store.value = Intent.UpdateMaze(it).reduce(_store.value)
-                client.send(UpdateMaze(it.toDto()))
-            }
-            .launchIn(scope)
+        generator.execute(newState.maze, message.generatorId) {
+            this.delay(::generatorDelay)
+                .onEach { maze ->
+                    _store.value = Intent.UpdateMaze(maze).reduce(_store.value)
+                    client.send(UpdateMaze(maze.toDto()))
+                }
+        }
 
     }
 
     private suspend fun solve(message: SolverAction.Solve) = clearScope(scope) {
 
-        val state = store.value
+        val currentState = store.value
 
-        if (state.initialized) {
+        if (currentState.initialized) {
 
-            val flow = solverManager.solve(message.solverId, state.maze)
-
-            solverJob = flow
-                .mapNotNull { it?.toList() }
-                .delay(::solverDelay)
-                .onEach {
-                    client.send(UpdatePath(it))
-                }
-                .launchIn(scope)
+            solver.execute(currentState.maze, message.solverId) {
+                this.delay(::solverDelay)
+                    .filterNotNull()
+                    .onEach {
+                        _store.value = Intent.UpdatePath(it).reduce(_store.value)
+                        client.send(UpdatePath(it.toList()))
+                    }
+            }
 
         }
 
@@ -159,11 +138,11 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
 
     init {
 
-        generatorManager.state.onEach {
+        generator.state.onEach {
             client.send(UpdateGeneratorState(it))
         }.launchIn(scope + Job())
 
-        solverManager.state.onEach {
+        solver.state.onEach {
             client.send(UpdateSolverState(it))
         }.launchIn(scope + Job())
 

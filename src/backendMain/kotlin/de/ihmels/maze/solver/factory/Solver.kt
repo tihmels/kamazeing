@@ -10,6 +10,7 @@ enum class Solver(val id: Int, private val descriptor: String) {
 
     companion object {
         fun toEntities() = values().map { IdAndName(it.id, it.descriptor) }
+        fun getSolverById(id: Int) = values().find { it.id == id } ?: default()
         fun default() = BREATH_FIRST
     }
 

@@ -91,8 +91,10 @@ private fun Container.appView() {
 
     div(classes = setOf("row", "no-gutter")) {
 
-        div(className = "col").bindNotNull(mazeState) {
-            mazePanel(it)
+        div(className = "col").bind(mazeState) {
+            if (it != null) {
+                val panel = mazePanel(it)
+            }
         }
 
         div(classes = setOf("col", "col-3")) {
@@ -143,20 +145,4 @@ private fun Container.disconnectedView() {
 
 fun main() {
     startApplication(::App, module.hot)
-}
-
-fun <S, W : Component> W.bindNotNull(
-    observableState: ObservableState<S?>,
-    removeChildren: Boolean = true,
-    factory: (W.(S) -> Unit)
-): W {
-    this.addBeforeDisposeHook(observableState.subscribe {
-        if (it != null) {
-            this.singleRenderAsync {
-                if (removeChildren) (this as? Container)?.disposeAll()
-                factory(it)
-            }
-        }
-    })
-    return this
 }

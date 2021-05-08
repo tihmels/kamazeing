@@ -3,7 +3,7 @@ package de.ihmels.ui
 import de.ihmels.AppService
 import de.ihmels.CMessageType.SolverAction
 import de.ihmels.Entities
-import de.ihmels.SolverState
+import de.ihmels.FlowState
 import de.ihmels.StateService
 import io.kvision.core.Container
 import io.kvision.core.JustifyContent
@@ -16,7 +16,6 @@ import io.kvision.html.Div
 import io.kvision.html.button
 import io.kvision.panel.hPanel
 import io.kvision.state.bind
-import io.kvision.state.sub
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -35,7 +34,7 @@ fun Container.solverSettings(solvers: Entities) {
                 AppService.Request.solverAction(SolverAction.Cancel)
 
             }.bind(StateService.mazeState) {
-                disabled = it.solverState == SolverState.IDLE
+                disabled = it.solverState == FlowState.IDLE
             }
 
             button("Generate", className = "flex-one").onClick {
@@ -44,7 +43,7 @@ fun Container.solverSettings(solvers: Entities) {
                 AppService.Request.solverAction(SolverAction.Solve(generatorId))
 
             }.bind(StateService.mazeState) {
-                disabled = it.solverState == SolverState.RUNNING || it.initialized == false
+                disabled = it.solverState == FlowState.RUNNING || it.initialized == false
             }
         }
 

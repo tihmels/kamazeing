@@ -1,10 +1,6 @@
 .no-gutter > [class*='col'] {
-    padding-right:0;
-    padding-left:0;
-}
-
-.maze-grid {
-
+    padding-right: 0;
+    padding-left: 0;
 }
 
 .dot {
