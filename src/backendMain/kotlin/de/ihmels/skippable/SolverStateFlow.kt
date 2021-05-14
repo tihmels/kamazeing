@@ -8,7 +8,7 @@ import de.ihmels.maze.solver.factory.SolverFactoryImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
-class SolverStateFlow(scope: CoroutineScope) : MazeFlowExecutor<Node<Point2D>?>(scope) {
+class SolverStateFlow(scope: CoroutineScope) : MazeStateFlowExecutor<Node<Point2D>?>(scope) {
 
     override fun getMazeFlowProvider(id: Int): (Maze) -> Flow<Node<Point2D>?> =
         SolverFactoryImpl.createSolver(Solver.getSolverById(id))::solve

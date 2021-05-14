@@ -7,14 +7,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.*
 
-abstract class MazeFlowExecutor<T>(private val scope: CoroutineScope) {
+abstract class MazeStateFlowExecutor<T>(private val scope: CoroutineScope) {
 
     private val _state = MutableStateFlow(FlowState.IDLE)
     val state = _state.asStateFlow()
 
     private var flowJob: Job? = null
 
-    open fun execute(maze: Maze, id: Int, flowExtension: (Flow<T>).() -> Flow<T> = { identity() }) {
+    open fun execute(maze: Maze, id: Int, flowExtension: (Flow<T>).() -> Flow<*> = { identity() }) {
 
         val flowProvider = getMazeFlowProvider(id)
 
@@ -30,7 +30,7 @@ abstract class MazeFlowExecutor<T>(private val scope: CoroutineScope) {
 
     }
 
-    fun getFlow(maze: Maze, id: Int): Flow<T> = getMazeFlowProvider(id).invoke(maze)
+    fun getRawFlow(maze: Maze, id: Int): Flow<T> = getMazeFlowProvider(id)(maze)
 
     suspend fun cancel() {
         if (_state.value == FlowState.RUNNING) {

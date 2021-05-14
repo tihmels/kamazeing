@@ -55,10 +55,13 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
             is SolverAction.Solve -> solve(cMessage)
             is SolverAction.Cancel -> solver.cancel()
             is SolverAction.SetSpeed -> setSolverSpeed(cMessage.speed)
-            else -> {
-                throw IllegalStateException()
-            }
         }
+
+    private suspend fun sendGeneratorAlgorithms() =
+        client.send(Generators(Entities(Generator.toEntities(), Generator.default().id)))
+
+    private suspend fun sendSolverAlgorithms() =
+        client.send(Solvers(Entities(Solver.toEntities(), Solver.default().id)))
 
     private fun setSolverSpeed(speed: Int) {
         _store.value = Intent.UpdateGeneratorSpeed(speed).reduce(store.value)
@@ -67,12 +70,6 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
     private fun setGeneratorSpeed(speed: Int) {
         _store.value = Intent.UpdateSolverSpeed(speed).reduce(store.value)
     }
-
-    private suspend fun sendGeneratorAlgorithms() =
-        client.send(Generators(Entities(Generator.toEntities(), Generator.default().id)))
-
-    private suspend fun sendSolverAlgorithms() =
-        client.send(Solvers(Entities(Solver.toEntities(), Solver.default().id)))
 
     private suspend fun resetMaze() = clearScope(scope) {
 
@@ -91,8 +88,10 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
         if (properties.initializer > -1) {
             updatedState = Intent.ResetMaze.reduce(updatedState)
 
-            val flow = generator.getFlow(updatedState.maze, properties.initializer)
-            updatedState = Intent.UpdateMaze(flow.toList().last()).reduce(updatedState)
+            val flow = generator.getRawFlow(updatedState.maze, properties.initializer)
+            val finalMaze = flow.toList().last()
+
+            updatedState = Intent.UpdateMaze(finalMaze).reduce(updatedState)
         }
 
         _store.value = updatedState
