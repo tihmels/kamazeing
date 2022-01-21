@@ -3,8 +3,6 @@ package de.ihmels.ui
 import de.ihmels.*
 import io.kvision.core.*
 import io.kvision.core.Display.INLINEGRID
-import io.kvision.dropdown.cmLink
-import io.kvision.dropdown.contextMenu
 import io.kvision.html.*
 import io.kvision.panel.gridPanel
 import io.kvision.state.bind
@@ -83,7 +81,7 @@ private fun Div.setPathCell(
             else -> null
         }
 
-        image(stepImage, responsive = true, centered = true, classes = setOf("p-3"))
+        image(stepImage, responsive = true, centered = true, className = "p-3")
 
     } else {
 
@@ -97,7 +95,7 @@ private fun Div.setPathCell(
             else -> null
         }
 
-        image(stepImage, responsive = true, centered = true, classes = setOf("p-3"))
+        image(stepImage, responsive = true, centered = true, className = "p-3")
 
     }
 
@@ -109,7 +107,7 @@ private fun Div.setGoalCell() {
         GOAL_IMG,
         responsive = true,
         centered = true,
-        classes = setOf("p-2")
+        className = "p-2"
     ).setDragDropData("text/plain", "goal")
 }
 
@@ -118,7 +116,7 @@ private fun Div.setStartCell() {
         START_IMG,
         responsive = true,
         centered = true,
-        classes = setOf("p-2")
+        className = "p-2"
     ).setDragDropData("text/plain", "start")
 }
 

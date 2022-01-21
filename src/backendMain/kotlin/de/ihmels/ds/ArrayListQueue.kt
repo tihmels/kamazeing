@@ -1,4 +1,4 @@
-package de.ihmels.datastructure
+package de.ihmels.ds
 
 class ArrayListQueue<T>(vararg initialItems: T) : Queue<T> {
 

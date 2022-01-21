@@ -1,4 +1,4 @@
-package de.ihmels.datastructure
+package de.ihmels.ds
 
 interface Queue<T> {
 

@@ -23,7 +23,7 @@ fun Container.sidebarCard(title: String, collapsible: Boolean = false, init: Div
         .map { allowedChars.random() }
         .joinToString("")
 
-    div(classes = setOf("card", "my-2")) {
+    div(className = "card my-2") {
 
         div(className = "card-header") {
             content = title
@@ -33,7 +33,7 @@ fun Container.sidebarCard(title: String, collapsible: Boolean = false, init: Div
                     text = "",
                     icon = "fas fa-caret-down",
                     style = ButtonStyle.OUTLINESECONDARY,
-                    classes = setOf("btn-sm", "shadow-none")
+                    className = "btn-sm shadow-none"
                 ) {
 
                     setAttribute("data-toggle", "collapse")
@@ -45,7 +45,7 @@ fun Container.sidebarCard(title: String, collapsible: Boolean = false, init: Div
                 }
             }
         }
-        div(classes = setOf("card-body", "test")) {
+        div(className = "card-body test") {
 
             if (collapsible) {
                 id = random

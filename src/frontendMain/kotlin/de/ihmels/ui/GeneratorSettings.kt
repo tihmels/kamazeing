@@ -27,7 +27,7 @@ fun Container.generatorSettings(generators: Entities) {
 
         val generatorState = StateService.mazeState.sub { it.generatorState }
 
-        hPanel(justify = JustifyContent.STRETCH, spacing = 5, noWrappers = true) {
+        hPanel(justify = JustifyContent.STRETCH, spacing = 5) {
 
             button("Cancel", style = ButtonStyle.DANGER, className = "flex-one").onClick {
 

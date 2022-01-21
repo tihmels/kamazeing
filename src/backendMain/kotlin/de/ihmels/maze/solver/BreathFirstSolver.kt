@@ -1,8 +1,8 @@
 package de.ihmels.maze.solver
 
 import de.ihmels.Point2D
-import de.ihmels.datastructure.ArrayListQueue
-import de.ihmels.datastructure.Queue
+import de.ihmels.ds.ArrayListQueue
+import de.ihmels.ds.Queue
 import de.ihmels.maze.Maze
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

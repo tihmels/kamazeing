@@ -27,7 +27,7 @@ fun Container.solverSettings(solvers: Entities) {
 
         val form = getFormPanel(solvers)
 
-        hPanel(justify = JustifyContent.STRETCH, spacing = 5, noWrappers = true) {
+        hPanel(justify = JustifyContent.STRETCH, spacing = 5) {
 
             button("Cancel", style = ButtonStyle.DANGER, className = "flex-one").onClick {
 

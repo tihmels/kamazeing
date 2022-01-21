@@ -1,19 +1,15 @@
 package de.ihmels
 
 import de.ihmels.ui.*
-import io.kvision.Application
+import io.kvision.*
 import io.kvision.core.*
 import io.kvision.html.button
 import io.kvision.html.div
 import io.kvision.html.h1
 import io.kvision.html.h5
-import io.kvision.module
 import io.kvision.panel.ContainerType
 import io.kvision.panel.flexPanel
 import io.kvision.panel.root
-import io.kvision.require
-import io.kvision.startApplication
-import io.kvision.state.ObservableState
 import io.kvision.state.bind
 import io.kvision.state.sub
 import io.kvision.utils.perc
@@ -46,15 +42,15 @@ class App : Application() {
 
 private fun Container.header(connected: Boolean) {
 
-    div(classes = setOf("my-3", "row", "border-bottom", "no-gutter")) {
+    div(className = "my-3 row border-bottom no-gutter") {
 
-        div(classes = setOf("col")) {
+        div(className = "col") {
             h1("Kamazeing")
         }
 
         if (connected) {
 
-            div(classes = setOf("col-auto")) {
+            div(className = "col-auto") {
 
                 flexPanel(justify = JustifyContent.FLEXEND, alignItems = AlignItems.CENTER, spacing = 7) {
 
@@ -89,7 +85,7 @@ private fun Container.appView() {
 
     val mazeState = StateService.mazeState.sub { it.maze }
 
-    div(classes = setOf("row", "no-gutter")) {
+    div(className = "row no-gutter") {
 
         div(className = "col").bind(mazeState) {
             if (it != null) {
@@ -97,7 +93,7 @@ private fun Container.appView() {
             }
         }
 
-        div(classes = setOf("col", "col-3")) {
+        div(className = "col col-3") {
 
             val generatorStore = StateService.mazeState.sub { it.generatorAlgorithms }
             val solverStore = StateService.mazeState.sub { it.solverAlgorithms }
@@ -144,5 +140,5 @@ private fun Container.disconnectedView() {
 }
 
 fun main() {
-    startApplication(::App, module.hot)
+    startApplication(::App, module.hot, CoreModule, BootstrapModule, BootstrapCssModule, BootstrapSelectModule, FontAwesomeModule)
 }

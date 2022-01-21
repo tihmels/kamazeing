@@ -1,6 +1,6 @@
 package de.ihmels.maze.generator
 
-import de.ihmels.datastructure.ArrayListQueue
+import de.ihmels.ds.ArrayListQueue
 import de.ihmels.maze.Direction
 import de.ihmels.maze.Maze
 import de.ihmels.maze.moveTo
