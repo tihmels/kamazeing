@@ -26,8 +26,8 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
     private val generator = GeneratorStateFlow(scope)
     private val solver = SolverStateFlow(scope)
 
-    private var generatorDelay: Long = 300L
-    private var solverDelay: Long = 300L
+    private var generatorDelay: Long = 150L
+    private var solverDelay: Long = 150L
 
     suspend fun start() {
 

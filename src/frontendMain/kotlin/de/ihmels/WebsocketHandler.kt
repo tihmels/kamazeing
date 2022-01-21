@@ -3,10 +3,13 @@ package de.ihmels
 import de.ihmels.ConnectionState.*
 import de.ihmels.ws.WebsocketService
 import io.kvision.state.ObservableValue
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 enum class ConnectionState {
     ESTABLISHING, CONNECTED, DISCONNECTED
@@ -24,7 +27,7 @@ class WebsocketHandler(
 
     fun send(msg: CMessageType) = launch { outgoingChannel.send(CMessage(msg)) }
 
-    fun connect() = GlobalScope.launch {
+    fun connect() = launch {
 
         connectionState.value = ESTABLISHING
 
