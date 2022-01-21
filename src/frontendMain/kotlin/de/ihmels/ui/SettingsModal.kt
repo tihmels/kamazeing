@@ -31,11 +31,11 @@ class SettingsModal : Modal(caption = "Maze Settings") {
             )
             add(
                 SettingsForm::initialized,
-                CheckBox(label = "Initialized (will use the currently selected Generator)")
+                CheckBox(label = "Initialized (will use the currently selected generator)", value = false)
             )
         }
 
-        button("Submit", type = ButtonType.SUBMIT).onClick {
+        button("Submit", type = ButtonType.SUBMIT, className = "mt-2").onClick {
             val formData = formPanel.getData()
 
             val initializer =
