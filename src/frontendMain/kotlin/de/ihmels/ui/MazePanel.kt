@@ -3,7 +3,9 @@ package de.ihmels.ui
 import de.ihmels.*
 import io.kvision.core.*
 import io.kvision.core.Display.INLINEGRID
-import io.kvision.html.*
+import io.kvision.html.Div
+import io.kvision.html.div
+import io.kvision.html.image
 import io.kvision.panel.gridPanel
 import io.kvision.state.bind
 import io.kvision.state.sub
@@ -108,7 +110,9 @@ private fun Div.setGoalCell() {
         responsive = true,
         centered = true,
         className = "p-2"
-    ).setDragDropData("text/plain", "goal")
+    ){
+        addCssStyle(Style { cursor = Cursor.POINTER })
+    }.setDragDropData("text/plain", "goal")
 }
 
 private fun Div.setStartCell() {
@@ -117,7 +121,9 @@ private fun Div.setStartCell() {
         responsive = true,
         centered = true,
         className = "p-2"
-    ).setDragDropData("text/plain", "start")
+    ) {
+        addCssStyle(Style { cursor = Cursor.POINTER })
+    }.setDragDropData("text/plain", "start")
 }
 
 fun Container.cell(cell: CellDto, init: Div.() -> Unit) {

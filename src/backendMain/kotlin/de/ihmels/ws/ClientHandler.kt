@@ -34,6 +34,7 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
         try {
 
             for (message in client.input) {
+                log.info("Incoming message: ${message.messageType}")
                 handle(message.messageType)
             }
 
@@ -64,11 +65,21 @@ class ClientHandler(private val client: Client) : Logging, ClientMessageHandler 
         client.send(Solvers(Entities(Solver.toEntities(), Solver.default().id)))
 
     private fun setSolverSpeed(speed: Int) {
-        _store.value = Intent.UpdateGeneratorSpeed(speed).reduce(store.value)
+        solverDelay = when (speed) {
+            1 -> 300L
+            2 -> 200L
+            3 -> 100L
+            else -> 200L
+        }
     }
 
     private fun setGeneratorSpeed(speed: Int) {
-        _store.value = Intent.UpdateSolverSpeed(speed).reduce(store.value)
+        generatorDelay = when (speed) {
+            1 -> 300L
+            2 -> 200L
+            3 -> 100L
+            else -> 200L
+        }
     }
 
     private suspend fun resetMaze() = clearScope(scope) {

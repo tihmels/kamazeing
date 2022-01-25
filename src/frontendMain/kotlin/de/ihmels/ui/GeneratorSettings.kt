@@ -1,7 +1,10 @@
 package de.ihmels.ui
 
-import de.ihmels.*
+import de.ihmels.AppService
 import de.ihmels.CMessageType.GeneratorAction
+import de.ihmels.Entities
+import de.ihmels.FlowState
+import de.ihmels.StateService
 import io.kvision.core.Container
 import io.kvision.core.JustifyContent
 import io.kvision.core.StringPair

@@ -65,7 +65,7 @@ private fun Container.header(connected: Boolean) {
                     }
 
                     button("Reset") {
-                        title = "Resets all cells"
+                        title = "Reset cells"
                         enableTooltip()
                     }.onClick {
                         AppService.Request.resetMaze()
@@ -140,5 +140,5 @@ private fun Container.disconnectedView() {
 }
 
 fun main() {
-    startApplication(::App, module.hot, CoreModule, BootstrapModule, BootstrapCssModule, BootstrapSelectModule, FontAwesomeModule)
+    startApplication(::App, module.hot, BootstrapModule, BootstrapCssModule, BootstrapSelectModule, FontAwesomeModule, CoreModule)
 }
