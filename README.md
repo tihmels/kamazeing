@@ -1,5 +1,8 @@
 ## Gradle Tasks
 
+A web application visualizing different maze-making and pathfinding algorithms.
+The project is written entirely in Kotlin and implemented as a websocket-based client-server application using the [KVision](https://github.com/rjaros/kvision) web framework.
+
 ### Resource Processing
 * generatePotFile - Generates a `src/frontendMain/resources/i18n/messages.pot` translation template file.
 ### Compiling
