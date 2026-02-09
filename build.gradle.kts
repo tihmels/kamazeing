@@ -1,10 +1,13 @@
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     val kotlinVersion: String by System.getProperties()
     kotlin("plugin.serialization") version kotlinVersion
     kotlin("multiplatform") version kotlinVersion
+    val kspVersion: String by System.getProperties()
+    id("com.google.devtools.ksp") version kspVersion
+    val kiluaRpcVersion: String by System.getProperties()
+    id("dev.kilua.rpc") version kiluaRpcVersion
     val kvisionVersion: String by System.getProperties()
     id("io.kvision") version kvisionVersion
 }
@@ -14,54 +17,35 @@ group = "de.ihmels"
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
-// Versions
-val kotlinVersion: String by System.getProperties()
 val kvisionVersion: String by System.getProperties()
-val slf4jVersion: String by project
+val kiluaRpcVersion: String by System.getProperties()
 val ktorVersion: String by project
-val exposedVersion: String by project
-val hikariVersion: String by project
-val h2Version: String by project
-val pgsqlVersion: String by project
-val kweryVersion: String by project
 val logbackVersion: String by project
-val commonsCodecVersion: String by project
-val jdbcNamedParametersVersion: String by project
+val slf4jVersion: String by project
 
-val webDir = file("src/frontendMain/web")
 val mainClassName = "io.ktor.server.netty.EngineMain"
 
 kotlin {
-    jvm("backend") {
-        compilations.all {
-            java {
-                targetCompatibility = JavaVersion.VERSION_1_8
-            }
-            kotlinOptions {
-                jvmTarget = "1.8"
-                freeCompilerArgs = listOf("-Xjsr305=strict")
-            }
+    jvmToolchain(21)
+    jvm {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+        }
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        mainRun {
+            mainClass.set(mainClassName)
         }
     }
-    js("frontend") {
+    js(IR) {
         browser {
-            runTask {
+            useEsModules()
+            commonWebpackConfig {
                 outputFileName = "main.bundle.js"
                 sourceMaps = false
-                devServer = KotlinWebpackConfig.DevServer(
-                    open = false,
-                    port = 3000,
-                    proxy = mutableMapOf(
-                        "/kv/*" to "http://localhost:8080",
-                        "/kvws/*" to mapOf("target" to "ws://localhost:8080", "ws" to true)
-                    ),
-                    static = mutableListOf("$buildDir/processedResources/frontend/main")
-                )
-            }
-            webpackTask {
-                outputFileName = "main.bundle.js"
             }
             testTask {
                 useKarma {
@@ -70,107 +54,38 @@ kotlin {
             }
         }
         binaries.executable()
+        compilerOptions {
+            target.set("es2015")
+        }
     }
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("io.kvision:kvision-server-ktor:$kvisionVersion")
+                implementation("dev.kilua:kilua-rpc-ktor:$kiluaRpcVersion")
+                implementation("io.kvision:kvision-common-remote:$kvisionVersion")
             }
-            kotlin.srcDir("build/generated-src/common")
         }
-        val backendMain by getting {
+        val jvmMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-jdk8"))
                 implementation(kotlin("reflect"))
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
-                implementation("commons-codec:commons-codec:$commonsCodecVersion")
+                implementation("io.ktor:ktor-server-compression:$ktorVersion")
+                implementation("io.ktor:ktor-server-default-headers:$ktorVersion")
+                implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
                 implementation("org.slf4j:slf4j-api:$slf4jVersion")
             }
         }
-        val frontendMain by getting {
-            resources.srcDir(webDir)
+        val jsMain by getting {
             dependencies {
                 implementation("io.kvision:kvision:$kvisionVersion")
                 implementation("io.kvision:kvision-bootstrap:$kvisionVersion")
-                implementation("io.kvision:kvision-bootstrap-css:$kvisionVersion")
-                implementation("io.kvision:kvision-bootstrap-select:$kvisionVersion")
-                implementation("io.kvision:kvision-bootstrap-spinner:$kvisionVersion")
-                implementation("io.kvision:kvision-bootstrap-dialog:$kvisionVersion")
+                implementation("io.kvision:kvision-tom-select:$kvisionVersion")
                 implementation("io.kvision:kvision-fontawesome:$kvisionVersion")
-                implementation("io.kvision:kvision-datacontainer:$kvisionVersion")
-                implementation("io.kvision:kvision-redux:$kvisionVersion")
+                implementation("io.kvision:kvision-redux-kotlin:$kvisionVersion")
                 implementation("io.kvision:kvision-state:$kvisionVersion")
             }
-            kotlin.srcDir("build/generated-src/frontend")
         }
     }
 }
 
-afterEvaluate {
-    tasks {
-        create("frontendArchive", Jar::class).apply {
-            dependsOn("frontendBrowserProductionWebpack")
-            group = "package"
-            archiveAppendix.set("frontend")
-            val distribution =
-                project.tasks.getByName("frontendBrowserProductionWebpack", KotlinWebpack::class).destinationDirectory!!
-            from(distribution) {
-                include("*.*")
-            }
-            from(webDir)
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-            into("/assets")
-            inputs.files(distribution, webDir)
-            outputs.file(archiveFile)
-            manifest {
-                attributes(
-                    mapOf(
-                        "Implementation-Title" to rootProject.name,
-                        "Implementation-Group" to rootProject.group,
-                        "Implementation-Version" to rootProject.version,
-                        "Timestamp" to System.currentTimeMillis()
-                    )
-                )
-            }
-        }
-        getByName("backendProcessResources", Copy::class) {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        }
-        getByName("backendJar").group = "package"
-        create("jar", Jar::class).apply {
-            dependsOn("frontendArchive", "backendJar")
-            group = "package"
-            manifest {
-                attributes(
-                    mapOf(
-                        "Implementation-Title" to rootProject.name,
-                        "Implementation-Group" to rootProject.group,
-                        "Implementation-Version" to rootProject.version,
-                        "Timestamp" to System.currentTimeMillis(),
-                        "Main-Class" to mainClassName
-                    )
-                )
-            }
-            val dependencies = configurations["backendRuntimeClasspath"].filter { it.name.endsWith(".jar") } +
-                    project.tasks["backendJar"].outputs.files +
-                    project.tasks["frontendArchive"].outputs.files
-            dependencies.forEach {
-                if (it.isDirectory) from(it) else from(zipTree(it))
-            }
-            exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
-            inputs.files(dependencies)
-            outputs.file(archiveFile)
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        }
-        create("backendRun", JavaExec::class) {
-            dependsOn("compileKotlinBackend")
-            group = "run"
-            main = mainClassName
-            classpath =
-                configurations["backendRuntimeClasspath"] + project.tasks["compileKotlinBackend"].outputs.files +
-                        project.tasks["backendProcessResources"].outputs.files
-            workingDir = buildDir
-        }
-    }
-}

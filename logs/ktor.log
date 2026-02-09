@@ -1,0 +1,2 @@
+[2026-02-09 08:02:33,776] INFO de.ihmels.ws.WebsocketService - Client 72166e3c-2ecd-4eac-9499-667e3678caca disconnected
+[2026-02-09 08:02:34,144] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 48059654ms
