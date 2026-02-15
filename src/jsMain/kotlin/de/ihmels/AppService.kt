@@ -13,13 +13,35 @@ object AppService {
     fun connectToServer() = websocketHandler.connect()
 
     private fun messageHandler(message: SMessageType) = when (message) {
-        is SMessageType.UpdateMaze -> StateService.updateMaze(message.maze)
-        is SMessageType.UpdateGeneratorState -> StateService.updateGeneratorState(message.state)
-        is SMessageType.UpdatePath -> StateService.updatePath(message.path)
-        is SMessageType.ResetMaze -> StateService.resetMaze(message.maze)
-        is SMessageType.Generators -> StateService.updateGeneratorAlgorithms(message.generators)
-        is SMessageType.Solvers -> StateService.updateSolverAlgorithms(message.solvers)
-        is SMessageType.UpdateSolverState -> StateService.updateSolverState(message.state)
+        is SMessageType.UpdateMaze -> {
+            StateService.updateMaze(message.maze)
+            // Also update StateFlow for modern pattern testing
+            StateFlowService.updateMaze(message.maze)
+        }
+        is SMessageType.UpdateGeneratorState -> {
+            StateService.updateGeneratorState(message.state)
+            StateFlowService.updateGeneratorState(message.state)
+        }
+        is SMessageType.UpdatePath -> {
+            StateService.updatePath(message.path)
+            StateFlowService.updatePath(message.path)
+        }
+        is SMessageType.ResetMaze -> {
+            StateService.resetMaze(message.maze)
+            StateFlowService.resetMaze(message.maze)
+        }
+        is SMessageType.Generators -> {
+            StateService.updateGeneratorAlgorithms(message.generators)
+            StateFlowService.updateGeneratorAlgorithms(message.generators)
+        }
+        is SMessageType.Solvers -> {
+            StateService.updateSolverAlgorithms(message.solvers)
+            StateFlowService.updateSolverAlgorithms(message.solvers)
+        }
+        is SMessageType.UpdateSolverState -> {
+            StateService.updateSolverState(message.state)
+            StateFlowService.updateSolverState(message.state)
+        }
     }
 
     object Request {

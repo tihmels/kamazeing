@@ -47,6 +47,18 @@ Note: One can change the start and target position in the grid by dragging them 
 
 ### A-Star
 
+## Quick Start (Dev Mode)
+
+```bash
+# Terminal 1 - Backend (port 8080)
+./gradlew -t jvmRun
+
+# Terminal 2 - Frontend (port 3000)
+./gradlew -t jsBrowserDevelopmentRun
+```
+
+Open http://localhost:3000 in your browser.
+
 ## Gradle Tasks
 
 ### Resource Processing

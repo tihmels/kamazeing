@@ -126,6 +126,33 @@ sealed class CMessageType {
 data class SMessage(val messageType: SMessageType)
 
 @Serializable
+data class ProgressData(
+    val cellsProcessed: Int = 0,
+    val totalCells: Int = 0,
+    val percentComplete: Double = 0.0,
+    val elapsedMs: Long = 0L
+)
+
+@Serializable
+data class StatisticsData(
+    val algorithmName: String = "",
+    val durationMs: Long = 0L,
+    val cellsProcessed: Int = 0,
+    val pathLength: Int = 0,
+    val efficiency: Double = 0.0,
+    val algorithmType: String = "" // "generator" or "solver"
+)
+
+@Serializable
+data class ComparisonResult(
+    val algorithm1: String = "",
+    val algorithm2: String = "",
+    val stats1: StatisticsData = StatisticsData(),
+    val stats2: StatisticsData = StatisticsData(),
+    val winner: String = "" // "" (tie) or algorithm name of winner
+)
+
+@Serializable
 sealed class SMessageType {
 
     @Serializable
@@ -148,5 +175,14 @@ sealed class SMessageType {
 
     @Serializable
     data class UpdatePath(val path: List<Point2D>) : SMessageType()
+
+    @Serializable
+    data class UpdateProgress(val progress: ProgressData) : SMessageType()
+
+    @Serializable
+    data class UpdateStatistics(val statistics: StatisticsData) : SMessageType()
+
+    @Serializable
+    data class UpdateComparison(val result: ComparisonResult) : SMessageType()
 
 }

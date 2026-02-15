@@ -1,2 +1,41 @@
-[2026-02-09 08:02:33,776] INFO de.ihmels.ws.WebsocketService - Client 72166e3c-2ecd-4eac-9499-667e3678caca disconnected
-[2026-02-09 08:02:34,144] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 48059654ms
+[2026-02-15 18:15:56,874] INFO Application - Application started in 0.268 seconds.
+[2026-02-15 18:15:56,958] INFO Application - Responding at http://0.0.0.0:8080
+[2026-02-15 18:20:22,892] INFO de.ihmels.ws.WebsocketService - Client e57c843c-5186-4f65-9ee9-9f2671abf6f7 connected
+[2026-02-15 18:20:22,942] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@4a49fd37
+[2026-02-15 18:20:22,964] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3adb357b
+[2026-02-15 18:20:22,974] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@317ab3ae
+[2026-02-15 18:20:22,978] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 18:20:22,978] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 18:20:23,000] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 18:20:23,000] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 18:20:28,914] INFO de.ihmels.ws.ClientHandler - Incoming message: Generate(generatorId=0)
+[2026-02-15 18:20:48,339] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=3)
+[2026-02-15 18:21:57,272] INFO de.ihmels.ws.ClientHandler - Incoming message: Solve(solverId=0)
+[2026-02-15 18:21:59,376] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=3)
+[2026-02-15 18:22:06,625] INFO de.ihmels.ws.WebsocketService - Client e57c843c-5186-4f65-9ee9-9f2671abf6f7 disconnected
+[2026-02-15 18:22:06,930] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 104145ms
+[2026-02-15 18:43:58,311] INFO de.ihmels.ws.WebsocketService - Client 71df5861-b16d-4933-8123-f17cef422e5a connected
+[2026-02-15 18:43:58,367] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@4a49fd37
+[2026-02-15 18:43:58,367] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3adb357b
+[2026-02-15 18:43:58,367] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@317ab3ae
+[2026-02-15 18:43:58,368] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 18:43:58,368] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 18:43:58,407] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 18:43:58,407] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 18:44:00,080] INFO de.ihmels.ws.ClientHandler - Incoming message: Generate(generatorId=0)
+[2026-02-15 18:44:06,222] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=3)
+[2026-02-15 18:44:17,808] INFO de.ihmels.ws.ClientHandler - Incoming message: Solve(solverId=2)
+[2026-02-15 19:17:34,560] INFO de.ihmels.ws.WebsocketService - Client 71df5861-b16d-4933-8123-f17cef422e5a disconnected
+[2026-02-15 19:17:34,563] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 2016256ms
+[2026-02-15 21:27:48,909] INFO de.ihmels.ws.WebsocketService - Client 95b103f5-cbab-4ca7-8f1c-13fa1493abbd connected
+[2026-02-15 21:27:48,968] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@4a49fd37
+[2026-02-15 21:27:48,968] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3adb357b
+[2026-02-15 21:27:48,968] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@317ab3ae
+[2026-02-15 21:27:48,968] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:27:48,968] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:27:49,001] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:27:49,001] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:28:01,846] INFO de.ihmels.ws.ClientHandler - Incoming message: Generate(generatorId=0)
+[2026-02-15 21:28:24,202] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=3)
+[2026-02-15 21:28:35,041] INFO de.ihmels.ws.ClientHandler - Incoming message: Solve(solverId=2)
+[2026-02-15 21:28:36,289] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=3)
