@@ -253,40 +253,69 @@ html.dark-mode .maze-cell[style*="background"] {
   flex-wrap: wrap;
   gap: 0;
   width: 100%;
+  align-items: flex-start;
 }
 
 .maze-column {
-  flex: 1 1 600px;
+  flex: 1 1 calc(100% - 400px);
   min-width: 300px;
+  max-width: 100%;
   overflow: hidden;
 }
 
 .sidebar-column {
-  flex: 0 1 380px;
-  min-width: 280px;
+  flex: 0 1 400px;
+  min-width: 300px;
   padding: 15px;
   overflow: hidden;
 }
 
 @media (max-width: 1200px) {
   .maze-column {
-    flex: 1 1 500px;
+    flex: 1 1 calc(100% - 380px);
   }
 
   .sidebar-column {
-    flex: 0 1 360px;
+    flex: 0 1 380px;
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
+  .maze-column {
+    flex: 1 1 calc(100% - 350px);
+  }
+
+  .sidebar-column {
+    flex: 0 1 350px;
+  }
+}
+
+@media (max-width: 920px) {
   .maze-column {
     flex: 1 1 100%;
+    margin-bottom: 20px;
   }
 
   .sidebar-column {
     flex: 1 1 100%;
-    margin-top: 20px;
+    margin-top: 0;
     padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  button {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .notification {
+    min-width: calc(100vw - 30px);
+    right: 15px !important;
+  }
+
+  .sidebar-column {
+    padding: 10px;
   }
 }
 
