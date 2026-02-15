@@ -109,12 +109,16 @@ private fun Container.appView() {
 
             sidebar {
 
-                div().bind(generatorStore) {
-                    generatorSettings(it)
+                sidebarCard("Generator") {
+                    div().bind(generatorStore) {
+                        generatorSettings(it)
+                    }
                 }
 
-                div().bind(solverStore) {
-                    solverSettings(it)
+                sidebarCard("Solver") {
+                    div().bind(solverStore) {
+                        solverSettings(it)
+                    }
                 }
 
                 sidebarCard("Progress", collapsible = true) {
@@ -129,7 +133,9 @@ private fun Container.appView() {
                     algorithmComparisonPanel()
                 }
 
-                controlPanel()
+                sidebarCard("Controls", collapsible = true) {
+                    controlPanel()
+                }
 
             }
         }, basis = 400.px)
