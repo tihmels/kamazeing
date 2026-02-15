@@ -85,6 +85,9 @@ sealed class CMessageType {
         data class Generate(val generatorId: Int) : GeneratorAction()
 
         @Serializable
+        data class CompareGenerators(val generator1Id: Int, val generator2Id: Int) : GeneratorAction()
+
+        @Serializable
         data class SetSpeed(val speed: Int) : GeneratorAction()
 
         @Serializable

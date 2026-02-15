@@ -42,6 +42,15 @@ object AppService {
             StateService.updateSolverState(message.state)
             StateFlowService.updateSolverState(message.state)
         }
+        is SMessageType.UpdateProgress -> {
+            StateFlowService.updateProgress(message.progress)
+        }
+        is SMessageType.UpdateStatistics -> {
+            StateFlowService.addStatistics(message.statistics)
+        }
+        is SMessageType.UpdateComparison -> {
+            StateFlowService.updateComparison(message.result)
+        }
     }
 
     object Request {

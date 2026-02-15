@@ -41,7 +41,13 @@ object StateFlowService {
         val solverState: FlowState = FlowState.IDLE,
         val solutionPath: List<Point2D> = emptyList(),
         val generatorAlgorithms: Entities = Entities(),
-        val solverAlgorithms: Entities = Entities()
+        val solverAlgorithms: Entities = Entities(),
+        val progressStats: ProgressData = ProgressData(),
+        val statistics: List<StatisticsData> = emptyList(),
+        val comparisonMode: Boolean = false,
+        val comparisonResult: ComparisonResult? = null,
+        val currentSpeed: Int = 500, // milliseconds per step
+        val stepThroughMode: Boolean = false
     )
 
     // Private mutable state
@@ -99,6 +105,31 @@ object StateFlowService {
 
     fun updateSolverAlgorithms(solvers: Entities) {
         _mazeState.value = _mazeState.value.copy(solverAlgorithms = solvers)
+    }
+
+    fun updateProgress(progress: ProgressData) {
+        _mazeState.value = _mazeState.value.copy(progressStats = progress)
+    }
+
+    fun addStatistics(stats: StatisticsData) {
+        val updatedStats = _mazeState.value.statistics + stats
+        _mazeState.value = _mazeState.value.copy(statistics = updatedStats)
+    }
+
+    fun updateComparison(result: ComparisonResult) {
+        _mazeState.value = _mazeState.value.copy(comparisonResult = result)
+    }
+
+    fun setComparisonMode(enabled: Boolean) {
+        _mazeState.value = _mazeState.value.copy(comparisonMode = enabled)
+    }
+
+    fun setSpeed(speed: Int) {
+        _mazeState.value = _mazeState.value.copy(currentSpeed = speed)
+    }
+
+    fun toggleStepThroughMode() {
+        _mazeState.value = _mazeState.value.copy(stepThroughMode = !_mazeState.value.stepThroughMode)
     }
 
     fun reset() {
