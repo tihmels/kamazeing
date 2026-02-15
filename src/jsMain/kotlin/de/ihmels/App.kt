@@ -85,15 +85,15 @@ private fun Container.appView() {
 
     val mazeState = StateService.mazeState.sub { it.maze }
 
-    div(className = "row no-gutter responsive-layout") {
+    div(className = "responsive-layout") {
 
-        div(className = "col col-lg-7 col-xl-8").bind(mazeState) {
+        div(className = "maze-column").bind(mazeState) {
             if (it != null) {
                 val panel = mazePanel(it)
             }
         }
 
-        div(className = "col col-lg-5 col-xl-4 sidebar-col") {
+        div(className = "sidebar-column") {
 
             val generatorStore = StateService.mazeState.sub { it.generatorAlgorithms }
             val solverStore = StateService.mazeState.sub { it.solverAlgorithms }
