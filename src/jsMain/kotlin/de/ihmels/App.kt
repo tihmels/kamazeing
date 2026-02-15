@@ -133,10 +133,6 @@ private fun Container.appView() {
                     algorithmComparisonPanel()
                 }
 
-                sidebarCard("Controls", collapsible = true) {
-                    controlPanel()
-                }
-
             }
         }, basis = 400.px)
 
