@@ -19,12 +19,24 @@ sealed class Intent<T> {
         override fun reduce(old: ClientState): ClientState {
 
             val oldMaze = old.maze
+            val newRows = properties.rows ?: oldMaze.rows
+            val newColumns = properties.columns ?: oldMaze.columns
 
-            val newMaze = Maze(
-                properties.rows ?: oldMaze.rows,
-                properties.columns ?: oldMaze.columns,
-                properties.start?.let { { _ -> it } } ?: { oldMaze.start },
-                properties.goal?.let { { _ -> it } } ?: { oldMaze.goal })
+            // If dimensions changed, always use default topLeft and bottomRight positions
+            val dimensionChanged = newRows != oldMaze.rows || newColumns != oldMaze.columns
+
+            val newMaze = if (dimensionChanged) {
+                // New dimensions: use default positions (topLeft, bottomRight)
+                Maze(newRows, newColumns)
+            } else {
+                // Same dimensions: preserve or update specific positions if provided
+                Maze(
+                    newRows,
+                    newColumns,
+                    properties.start?.let { { _ -> it } } ?: { oldMaze.start },
+                    properties.goal?.let { { _ -> it } } ?: { oldMaze.goal }
+                )
+            }
 
             if (newMaze.dimensions == oldMaze.dimensions) {
                 newMaze.grid = oldMaze.grid
