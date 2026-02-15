@@ -108,6 +108,14 @@ private fun Container.appView() {
                     solverSettings(it)
                 }
 
+                progressIndicatorPanel()
+
+                statisticsPanel()
+
+                algorithmComparisonPanel()
+
+                controlPanel()
+
             }
 
         }
