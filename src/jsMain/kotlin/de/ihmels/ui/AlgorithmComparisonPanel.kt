@@ -21,7 +21,6 @@ fun Container.algorithmComparisonPanel() {
 
                 div(className = "comparison-container") {
 
-                    // Algorithm 1
                     div(className = "comparison-column") {
                         div(className = "comparison-header") {
                             +comparison.algorithm1
@@ -29,7 +28,6 @@ fun Container.algorithmComparisonPanel() {
                         comparisonStats(comparison.stats1, comparison.winner == comparison.algorithm1)
                     }
 
-                    // Algorithm 2
                     div(className = "comparison-column") {
                         div(className = "comparison-header") {
                             +comparison.algorithm2
@@ -39,7 +37,6 @@ fun Container.algorithmComparisonPanel() {
 
                 }
 
-                // Winner badge
                 if (comparison.winner.isNotEmpty()) {
                     div(className = "comparison-winner") {
                         span(className = "winner-badge") {

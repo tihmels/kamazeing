@@ -20,7 +20,6 @@ fun Container.statisticsPanel() {
 
                 h4("Recent Statistics")
 
-                // Show latest statistics
                 val latest = statistics.last()
 
                 div(className = "stats-grid") {

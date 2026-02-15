@@ -18,7 +18,6 @@ fun Container.controlPanel() {
 
         vPanel(spacing = 10) {
 
-            // Speed Control (as Radio Group since browser input range has poor UX)
             div(className = "control-group") {
 
                 label(className = "control-label") { +"Animation Speed" }
@@ -47,7 +46,6 @@ fun Container.controlPanel() {
 
             }
 
-            // Size Presets
             div(className = "control-group") {
 
                 label(className = "control-label") { +"Maze Size" }
@@ -74,7 +72,6 @@ fun Container.controlPanel() {
 
             }
 
-            // Step-through Mode
             div(className = "control-group") {
 
                 CheckBox(
@@ -99,12 +96,8 @@ fun Container.controlPanel() {
 
 }
 
-/**
- * Convert modern speed (milliseconds) to legacy speed (1-3 scale)
- * 1 = Slow (300ms), 2 = Medium (200ms), 3 = Fast (100ms)
- */
 private fun speedToLegacy(ms: Int): Int = when {
-    ms > 200 -> 1  // Slow
-    ms > 100 -> 2  // Medium
-    else -> 3      // Fast
+    ms > 200 -> 1
+    ms > 100 -> 2
+    else -> 3
 }
