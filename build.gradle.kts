@@ -84,6 +84,8 @@ kotlin {
                 implementation("io.kvision:kvision-fontawesome:$kvisionVersion")
                 implementation("io.kvision:kvision-redux-kotlin:$kvisionVersion")
                 implementation("io.kvision:kvision-state:$kvisionVersion")
+                // KVision 9.x: Modern Kotlin coroutines state management
+                implementation("io.kvision:kvision-state-flow:$kvisionVersion")
             }
         }
     }
