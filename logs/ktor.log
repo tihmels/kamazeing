@@ -39,3 +39,147 @@
 [2026-02-15 21:28:24,202] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=3)
 [2026-02-15 21:28:35,041] INFO de.ihmels.ws.ClientHandler - Incoming message: Solve(solverId=2)
 [2026-02-15 21:28:36,289] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=3)
+[2026-02-15 21:32:50,645] INFO de.ihmels.ws.WebsocketService - Client 95b103f5-cbab-4ca7-8f1c-13fa1493abbd disconnected
+[2026-02-15 21:32:50,654] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 301748ms
+[2026-02-15 21:32:51,101] INFO de.ihmels.ws.WebsocketService - Client f2f08189-52a8-4947-b9f8-65f09e9e25cc connected
+[2026-02-15 21:32:51,164] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@4a49fd37
+[2026-02-15 21:32:51,164] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3adb357b
+[2026-02-15 21:32:51,164] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@317ab3ae
+[2026-02-15 21:32:51,165] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:32:51,165] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:32:51,194] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:32:51,194] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:33:17,367] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=2)
+[2026-02-15 21:33:18,088] INFO de.ihmels.ws.ClientHandler - Incoming message: Generate(generatorId=0)
+[2026-02-15 21:33:55,412] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=2)
+[2026-02-15 21:33:57,641] INFO de.ihmels.ws.ClientHandler - Incoming message: Solve(solverId=2)
+[2026-02-15 21:35:02,347] INFO de.ihmels.ws.WebsocketService - Client f2f08189-52a8-4947-b9f8-65f09e9e25cc disconnected
+[2026-02-15 21:35:02,352] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 131255ms
+[2026-02-15 21:35:02,626] INFO de.ihmels.ws.WebsocketService - Client 840d1c1f-2599-4a07-a242-0ab841df9b41 connected
+[2026-02-15 21:35:02,666] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@4a49fd37
+[2026-02-15 21:35:02,667] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3adb357b
+[2026-02-15 21:35:02,667] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@317ab3ae
+[2026-02-15 21:35:02,667] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:35:02,667] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:35:02,689] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:35:02,689] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:35:07,873] INFO de.ihmels.ws.WebsocketService - Client 840d1c1f-2599-4a07-a242-0ab841df9b41 disconnected
+[2026-02-15 21:35:07,874] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 5250ms
+[2026-02-15 21:35:08,109] INFO de.ihmels.ws.WebsocketService - Client bca1eb41-a753-4662-9733-a656244e5fc3 connected
+[2026-02-15 21:35:08,151] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@4a49fd37
+[2026-02-15 21:35:08,151] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3adb357b
+[2026-02-15 21:35:08,152] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@317ab3ae
+[2026-02-15 21:35:08,152] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 21:35:08,153] ERRORApplication - Websocket handler failed
+java.lang.NoClassDefFoundError: de/ihmels/MazeProperties$$serializer
+	at de.ihmels.CMessageType$UpdateMazeProperties$$serializer.childSerializers(Model.kt:115)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor.childSerializers_delegate$lambda$0(PluginGeneratedSerialDescriptor.kt:35)
+	at kotlin.SafePublicationLazyImpl.getValue(LazyJVM.kt:125)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor.getChildSerializers(PluginGeneratedSerialDescriptor.kt:35)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor.getElementDescriptor(PluginGeneratedSerialDescriptor.kt:75)
+	at kotlinx.serialization.descriptors.SerialDescriptorKt$elementDescriptors$1$1.next(SerialDescriptor.kt:420)
+	at kotlinx.serialization.descriptors.SerialDescriptorKt$elementDescriptors$1$1.next(SerialDescriptor.kt:415)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptorKt.hashCodeImpl(PluginGeneratedSerialDescriptor.kt:136)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor._hashCode_delegate$lambda$0(PluginGeneratedSerialDescriptor.kt:43)
+	at kotlin.SafePublicationLazyImpl.getValue(LazyJVM.kt:125)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor.get_hashCode(PluginGeneratedSerialDescriptor.kt:43)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor.hashCode(PluginGeneratedSerialDescriptor.kt:96)
+	at java.base/java.util.concurrent.ConcurrentHashMap.get(ConcurrentHashMap.java:936)
+	at kotlinx.serialization.json.internal.DescriptorSchemaCache.get(SchemaCache.kt:37)
+	at kotlinx.serialization.json.internal.DescriptorSchemaCache.getOrPut(SchemaCache.kt:29)
+	at kotlinx.serialization.json.internal.JsonNamesMapKt.deserializationNamesMap(JsonNamesMap.kt:54)
+	at kotlinx.serialization.json.internal.JsonNamesMapKt.getJsonNameIndexSlowPath(JsonNamesMap.kt:85)
+	at kotlinx.serialization.json.internal.JsonNamesMapKt.getJsonNameIndex(JsonNamesMap.kt:108)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeObjectIndex(StreamingJsonDecoder.kt:229)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeElementIndex(StreamingJsonDecoder.kt:178)
+	at de.ihmels.CMessageType$UpdateMazeProperties$$serializer.deserialize(Model.kt:115)
+	at de.ihmels.CMessageType$UpdateMazeProperties$$serializer.deserialize(Model.kt:115)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeSerializableValue(StreamingJsonDecoder.kt:89)
+	at kotlinx.serialization.encoding.AbstractDecoder.decodeSerializableValue(AbstractDecoder.kt:43)
+	at kotlinx.serialization.encoding.AbstractDecoder.decodeSerializableElement(AbstractDecoder.kt:70)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeSerializableElement(StreamingJsonDecoder.kt:168)
+	at de.ihmels.CMessage$$serializer.deserialize(Model.kt:75)
+	at de.ihmels.CMessage$$serializer.deserialize(Model.kt:75)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeSerializableValue(StreamingJsonDecoder.kt:69)
+	at kotlinx.serialization.json.Json.decodeFromString(Json.kt:149)
+	at dev.kilua.rpc.KotlinxObjectDeSerializer.deserialize(KotlinxObjectDeSerializer.kt:41)
+	at dev.kilua.rpc.WebsocketHandlerKt$handleWebsocketConnection$5$invokeSuspend$$inlined$map$1$2.emit(Emitters.kt:51)
+	at dev.kilua.rpc.WebsocketHandlerKt$handleWebsocketConnection$5$invokeSuspend$$inlined$mapNotNull$2$2.emit(Emitters.kt:53)
+	at dev.kilua.rpc.WebsocketHandlerKt$handleWebsocketConnection$5$invokeSuspend$$inlined$mapNotNull$1$2.emit(Emitters.kt:52)
+	at kotlinx.coroutines.flow.FlowKt__ChannelsKt.emitAllImpl$FlowKt__ChannelsKt(Channels.kt:33)
+	at kotlinx.coroutines.flow.FlowKt__ChannelsKt.access$emitAllImpl$FlowKt__ChannelsKt(Channels.kt:1)
+	at kotlinx.coroutines.flow.FlowKt__ChannelsKt$emitAllImpl$1.invokeSuspend(Channels.kt)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:148)
+	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:141)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:535)
+	at io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:201)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1195)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.ClassNotFoundException: de.ihmels.MazeProperties$$serializer
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at io.ktor.server.engine.OverridingClassLoader$ChildURLClassLoader.findClass(OverridingClassLoader.kt:50)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:593)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	... 47 common frames omitted
+[2026-02-15 21:35:08,164] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 58ms
+[2026-02-15 21:35:25,557] INFO de.ihmels.ws.WebsocketService - Client b3c77f14-dfc8-4ef7-9caa-363649199e27 connected
+[2026-02-15 21:35:25,573] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@4a49fd37
+[2026-02-15 21:35:25,573] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3adb357b
+[2026-02-15 21:35:25,573] ERRORApplication - Websocket handler failed
+java.lang.NoClassDefFoundError: de/ihmels/MazeProperties$$serializer
+	at de.ihmels.CMessageType$UpdateMazeProperties$$serializer.childSerializers(Model.kt:115)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor.childSerializers_delegate$lambda$0(PluginGeneratedSerialDescriptor.kt:35)
+	at kotlin.SafePublicationLazyImpl.getValue(LazyJVM.kt:125)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor.getChildSerializers(PluginGeneratedSerialDescriptor.kt:35)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor.getElementDescriptor(PluginGeneratedSerialDescriptor.kt:75)
+	at kotlinx.serialization.descriptors.SerialDescriptorKt$elementDescriptors$1$1.next(SerialDescriptor.kt:420)
+	at kotlinx.serialization.descriptors.SerialDescriptorKt$elementDescriptors$1$1.next(SerialDescriptor.kt:415)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptorKt.hashCodeImpl(PluginGeneratedSerialDescriptor.kt:136)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor._hashCode_delegate$lambda$0(PluginGeneratedSerialDescriptor.kt:43)
+	at kotlin.SafePublicationLazyImpl.getValue(LazyJVM.kt:125)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor.get_hashCode(PluginGeneratedSerialDescriptor.kt:43)
+	at kotlinx.serialization.internal.PluginGeneratedSerialDescriptor.hashCode(PluginGeneratedSerialDescriptor.kt:96)
+	at java.base/java.util.concurrent.ConcurrentHashMap.get(ConcurrentHashMap.java:936)
+	at kotlinx.serialization.json.internal.DescriptorSchemaCache.get(SchemaCache.kt:37)
+	at kotlinx.serialization.json.internal.DescriptorSchemaCache.getOrPut(SchemaCache.kt:29)
+	at kotlinx.serialization.json.internal.JsonNamesMapKt.deserializationNamesMap(JsonNamesMap.kt:54)
+	at kotlinx.serialization.json.internal.JsonNamesMapKt.getJsonNameIndexSlowPath(JsonNamesMap.kt:85)
+	at kotlinx.serialization.json.internal.JsonNamesMapKt.getJsonNameIndex(JsonNamesMap.kt:108)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeObjectIndex(StreamingJsonDecoder.kt:229)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeElementIndex(StreamingJsonDecoder.kt:178)
+	at de.ihmels.CMessageType$UpdateMazeProperties$$serializer.deserialize(Model.kt:115)
+	at de.ihmels.CMessageType$UpdateMazeProperties$$serializer.deserialize(Model.kt:115)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeSerializableValue(StreamingJsonDecoder.kt:89)
+	at kotlinx.serialization.encoding.AbstractDecoder.decodeSerializableValue(AbstractDecoder.kt:43)
+	at kotlinx.serialization.encoding.AbstractDecoder.decodeSerializableElement(AbstractDecoder.kt:70)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeSerializableElement(StreamingJsonDecoder.kt:168)
+	at de.ihmels.CMessage$$serializer.deserialize(Model.kt:75)
+	at de.ihmels.CMessage$$serializer.deserialize(Model.kt:75)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeSerializableValue(StreamingJsonDecoder.kt:69)
+	at kotlinx.serialization.json.Json.decodeFromString(Json.kt:149)
+	at dev.kilua.rpc.KotlinxObjectDeSerializer.deserialize(KotlinxObjectDeSerializer.kt:41)
+	at dev.kilua.rpc.WebsocketHandlerKt$handleWebsocketConnection$5$invokeSuspend$$inlined$map$1$2.emit(Emitters.kt:51)
+	at dev.kilua.rpc.WebsocketHandlerKt$handleWebsocketConnection$5$invokeSuspend$$inlined$mapNotNull$2$2.emit(Emitters.kt:53)
+	at dev.kilua.rpc.WebsocketHandlerKt$handleWebsocketConnection$5$invokeSuspend$$inlined$mapNotNull$1$2.emit(Emitters.kt:52)
+	at kotlinx.coroutines.flow.FlowKt__ChannelsKt.emitAllImpl$FlowKt__ChannelsKt(Channels.kt:33)
+	at kotlinx.coroutines.flow.FlowKt__ChannelsKt.access$emitAllImpl$FlowKt__ChannelsKt(Channels.kt:1)
+	at kotlinx.coroutines.flow.FlowKt__ChannelsKt$emitAllImpl$1.invokeSuspend(Channels.kt)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:148)
+	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:141)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:535)
+	at io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:201)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1195)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.ClassNotFoundException: de.ihmels.MazeProperties$$serializer
+	... 47 common frames omitted
+[2026-02-15 21:35:25,575] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 22ms

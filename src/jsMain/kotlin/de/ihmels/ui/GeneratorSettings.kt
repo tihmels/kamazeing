@@ -4,10 +4,12 @@ import de.ihmels.AppService
 import de.ihmels.CMessageType.GeneratorAction
 import de.ihmels.Entities
 import de.ihmels.FlowState
+import de.ihmels.StateFlowService
 import de.ihmels.StateService
 import io.kvision.core.Container
 import io.kvision.core.JustifyContent
 import io.kvision.core.StringPair
+import io.kvision.form.check.CheckBox
 import io.kvision.form.check.RadioGroup
 import io.kvision.form.formPanel
 import io.kvision.form.select.TomSelect
@@ -20,7 +22,12 @@ import io.kvision.state.sub
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GeneratorForm(val selectedGenerator: String, val speed: String)
+data class GeneratorForm(
+    val selectedGenerator: String,
+    val speed: String,
+    val comparisonMode: Boolean = false,
+    val sizePreset: String = "50"
+)
 
 fun Container.generatorSettings(generators: Entities) {
 
@@ -77,6 +84,37 @@ private fun Div.getFormPanel(generators: Entities) = formPanel<GeneratorForm> {
             subscribe {
                 if (!it.isNullOrBlank()) {
                     AppService.Request.updateGeneratorSpeed(it.toInt())
+                }
+            }
+        }
+    )
+
+    add(
+        GeneratorForm::comparisonMode, CheckBox(
+            label = "Comparison Mode",
+            value = false
+        ) {
+
+            subscribe {
+                StateFlowService.setComparisonMode(it ?: false)
+            }
+        }
+    )
+
+    add(
+        GeneratorForm::sizePreset, TomSelect(
+            listOf(
+                StringPair("20", "Small (20x20)"),
+                StringPair("50", "Medium (50x50)"),
+                StringPair("100", "Large (100x100)")
+            ),
+            value = "50"
+        ) {
+
+            subscribe {
+                if (!it.isNullOrBlank()) {
+                    val size = it.toInt()
+                    AppService.Request.updateMaze(rows = size, columns = size)
                 }
             }
         }
