@@ -245,23 +245,66 @@ html.dark-mode .maze-cell[style*="background"] {
 }
 
 /* ============================================================
-   RESPONSIVE IMPROVEMENTS
+   RESPONSIVE LAYOUT
    ============================================================ */
 
-@media (max-width: 768px) {
-  .row.no-gutter > .col-3 {
-    width: 100%;
-    margin-top: 20px;
+.responsive-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.responsive-layout > .col {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.responsive-layout > [class*='col-'] {
+  min-width: 0;
+}
+
+.sidebar-col {
+  overflow-y: auto;
+  max-height: calc(100vh - 100px);
+  padding: 15px;
+}
+
+@media (max-width: 1200px) {
+  .sidebar-col {
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+
+@media (max-width: 992px) {
+  .responsive-layout {
+    flex-direction: column;
   }
 
+  .responsive-layout > [class*='col-'] {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  .sidebar-col {
+    margin-top: 20px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
   button {
-    font-size: 16px; /* Prevent mobile zoom on input focus */
-    min-height: 44px; /* Touch target size */
+    font-size: 16px;
+    min-height: 44px;
   }
 
   .notification {
     min-width: calc(100vw - 30px);
     right: 15px !important;
+  }
+
+  .sidebar-col {
+    padding: 10px;
   }
 }
 
