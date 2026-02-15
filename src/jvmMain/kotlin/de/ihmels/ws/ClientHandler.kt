@@ -3,7 +3,6 @@ package de.ihmels.ws
 import de.ihmels.*
 import de.ihmels.CMessageType.*
 import de.ihmels.SMessageType.*
-import kotlin.system.measureTimeMillis
 import de.ihmels.maze.generator.factory.Generator
 import de.ihmels.maze.solver.factory.Solver
 import de.ihmels.maze.solver.toList
@@ -198,7 +197,7 @@ class ClientHandler(private val client: Client) : Logging {
 
                         totalTime = System.currentTimeMillis() - startTime
                         visitedCount++
-                        pathLength = path?.toList()?.size ?: 0
+                        pathLength = path.toList().size
 
                         // Emit progress updates (throttle to every 200ms)
                         if (totalTime - lastProgressUpdate >= 200) {
@@ -296,8 +295,8 @@ class ClientHandler(private val client: Client) : Logging {
         }
 
         // Collect stats for first algorithm
-        visitedCells1 = _store.value.maze?.cells?.count { !it.isClosed() } ?: 0
-        totalCells1 = _store.value.maze?.cells?.size ?: 1
+        visitedCells1 = _store.value.maze.cells.count { !it.isClosed() }
+        totalCells1 = _store.value.maze.cells.size
         efficiency1 = (visitedCells1.toDouble() / totalCells1) * 100
 
         val stats1 = StatisticsData(
@@ -353,8 +352,8 @@ class ClientHandler(private val client: Client) : Logging {
         }
 
         // Collect stats for second algorithm
-        visitedCells2 = _store.value.maze?.cells?.count { !it.isClosed() } ?: 0
-        totalCells2 = _store.value.maze?.cells?.size ?: 1
+        visitedCells2 = _store.value.maze.cells.count { !it.isClosed() }
+        totalCells2 = _store.value.maze.cells.size
         efficiency2 = (visitedCells2.toDouble() / totalCells2) * 100
 
         val stats2 = StatisticsData(
