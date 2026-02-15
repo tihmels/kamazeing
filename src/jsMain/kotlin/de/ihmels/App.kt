@@ -10,6 +10,10 @@ import io.kvision.html.h5
 import io.kvision.panel.ContainerType
 import io.kvision.panel.flexPanel
 import io.kvision.panel.root
+import io.kvision.core.FlexWrap
+import io.kvision.core.FlexDirection
+import io.kvision.core.AlignItems
+import io.kvision.utils.px
 import io.kvision.state.bind
 import io.kvision.state.sub
 import io.kvision.utils.perc
@@ -85,16 +89,21 @@ private fun Container.appView() {
 
     val mazeState = StateService.mazeState.sub { it.maze }
 
-    div(className = "responsive-layout") {
+    flexPanel(
+        FlexDirection.ROW,
+        FlexWrap.WRAP,
+        alignItems = AlignItems.FLEXSTART
+    ) {
 
-        div(className = "maze-column").bind(mazeState) {
-            if (it != null) {
-                val panel = mazePanel(it)
+        add(div {
+            bind(mazeState) {
+                if (it != null) {
+                    val panel = mazePanel(it)
+                }
             }
-        }
+        }, grow = 1, basis = 300.px)
 
-        div(className = "sidebar-column") {
-
+        add(div {
             val generatorStore = StateService.mazeState.sub { it.generatorAlgorithms }
             val solverStore = StateService.mazeState.sub { it.solverAlgorithms }
 
@@ -123,8 +132,8 @@ private fun Container.appView() {
                 controlPanel()
 
             }
+        }, basis = 400.px)
 
-        }
     }
 
 }
