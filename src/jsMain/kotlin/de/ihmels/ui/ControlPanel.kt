@@ -54,13 +54,13 @@ fun Container.controlPanel() {
 
                 TomSelect(
                     listOf(
-                        StringPair("20", "Small (20×20)"),
-                        StringPair("35", "Medium (35×35)"),
-                        StringPair("50", "Large (50×50)"),
-                        StringPair("75", "Extra Large (75×75)"),
-                        StringPair("100", "Huge (100×100)")
+                        StringPair("10", "Tiny (10×10)"),
+                        StringPair("15", "Small (15×15)"),
+                        StringPair("20", "Medium (20×20)"),
+                        StringPair("30", "Large (30×30)"),
+                        StringPair("40", "Extra Large (40×40)")
                     ),
-                    value = "50"
+                    value = "15"
                 ) {
 
                     subscribe { newValue ->

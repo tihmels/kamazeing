@@ -104,11 +104,12 @@ private fun Div.getFormPanel(generators: Entities) = formPanel<GeneratorForm> {
     add(
         GeneratorForm::sizePreset, TomSelect(
             listOf(
-                StringPair("20", "Small (20x20)"),
-                StringPair("50", "Medium (50x50)"),
-                StringPair("100", "Large (100x100)")
+                StringPair("10", "Tiny (10×10)"),
+                StringPair("15", "Small (15×15)"),
+                StringPair("20", "Medium (20×20)"),
+                StringPair("30", "Large (30×30)")
             ),
-            value = "50"
+            value = "15"
         ) {
 
             subscribe {
