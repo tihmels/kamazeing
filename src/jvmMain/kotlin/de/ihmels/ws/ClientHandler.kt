@@ -129,7 +129,6 @@ class ClientHandler(private val client: Client) : Logging {
 
                     totalTime = System.currentTimeMillis() - startTime
 
-                    // Emit progress updates (throttle to every 200ms to avoid overloading WebSocket)
                     if (totalTime - lastProgressUpdate >= 200) {
                         val visitedCells = maze.cells.count { !it.isClosed() }
                         val totalCells = maze.cells.size
@@ -154,7 +153,6 @@ class ClientHandler(private val client: Client) : Logging {
                 }
         }
 
-        // Emit final statistics
         val finalState = _store.value
         val finalMaze = finalState.maze
         val visitedCells = finalMaze.cells.count { !it.isClosed() }
@@ -199,7 +197,6 @@ class ClientHandler(private val client: Client) : Logging {
                         visitedCount++
                         pathLength = path.toList().size
 
-                        // Emit progress updates (throttle to every 200ms)
                         if (totalTime - lastProgressUpdate >= 200) {
                             val totalCells = currentState.maze.cells.size
                             val percentComplete = (visitedCount.toDouble() / totalCells) * 100
@@ -223,7 +220,6 @@ class ClientHandler(private val client: Client) : Logging {
                     }
             }
 
-            // Emit final statistics
             val totalCells = currentState.maze.cells.size
             val efficiency = (visitedCount.toDouble() / totalCells) * 100
 
@@ -246,7 +242,6 @@ class ClientHandler(private val client: Client) : Logging {
 
     private suspend fun compareGenerators(message: GeneratorAction.CompareGenerators) = clearScope(scope) {
 
-        // Get generator names for stats
         val generators = Generator.values()
         val gen1Name = generators.find { it.id == message.generator1Id }?.name ?: "Generator ${message.generator1Id}"
         val gen2Name = generators.find { it.id == message.generator2Id }?.name ?: "Generator ${message.generator2Id}"
@@ -256,7 +251,6 @@ class ClientHandler(private val client: Client) : Logging {
         var totalCells1 = 0
         var efficiency1 = 0.0
 
-        // Run first generator
         val newState = Intent.ResetMaze.reduce(_store.value)
         _store.value = newState
 
@@ -269,7 +263,6 @@ class ClientHandler(private val client: Client) : Logging {
 
                     totalTime1 = System.currentTimeMillis() - startTime
 
-                    // Throttle progress updates
                     if (totalTime1 - lastProgressUpdate >= 200) {
                         visitedCells1 = maze.cells.count { !it.isClosed() }
                         totalCells1 = maze.cells.size
@@ -294,7 +287,6 @@ class ClientHandler(private val client: Client) : Logging {
                 }
         }
 
-        // Collect stats for first algorithm
         visitedCells1 = _store.value.maze.cells.count { !it.isClosed() }
         totalCells1 = _store.value.maze.cells.size
         efficiency1 = (visitedCells1.toDouble() / totalCells1) * 100
@@ -313,7 +305,6 @@ class ClientHandler(private val client: Client) : Logging {
         var totalCells2 = 0
         var efficiency2 = 0.0
 
-        // Run second generator
         val resetState = Intent.ResetMaze.reduce(_store.value)
         _store.value = resetState
 
@@ -326,7 +317,6 @@ class ClientHandler(private val client: Client) : Logging {
 
                     totalTime2 = System.currentTimeMillis() - startTime
 
-                    // Throttle progress updates
                     if (totalTime2 - lastProgressUpdate >= 200) {
                         visitedCells2 = maze.cells.count { !it.isClosed() }
                         totalCells2 = maze.cells.size
@@ -351,7 +341,6 @@ class ClientHandler(private val client: Client) : Logging {
                 }
         }
 
-        // Collect stats for second algorithm
         visitedCells2 = _store.value.maze.cells.count { !it.isClosed() }
         totalCells2 = _store.value.maze.cells.size
         efficiency2 = (visitedCells2.toDouble() / totalCells2) * 100
@@ -365,14 +354,12 @@ class ClientHandler(private val client: Client) : Logging {
             algorithmType = "generator"
         )
 
-        // Determine winner (by efficiency, then by time)
         val winner = when {
             efficiency1 != efficiency2 -> if (efficiency1 > efficiency2) gen1Name else gen2Name
             totalTime1 != totalTime2 -> if (totalTime1 < totalTime2) gen1Name else gen2Name
             else -> ""
         }
 
-        // Send comparison result
         client.send(
             UpdateComparison(
                 ComparisonResult(
