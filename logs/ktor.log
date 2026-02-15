@@ -1199,3 +1199,193 @@ Caused by: java.lang.ClassNotFoundException: de.ihmels.MazeProperties$$serialize
 [2026-02-15 22:02:49,221] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
 [2026-02-15 22:02:49,221] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
 [2026-02-15 22:02:54,838] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=20, columns=20, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:01,043] INFO de.ihmels.ws.WebsocketService - Client 8bd75f44-dc5d-4141-a928-c90726c71cec disconnected
+[2026-02-15 22:03:01,044] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 11912ms
+[2026-02-15 22:03:01,232] INFO de.ihmels.ws.WebsocketService - Client acc963a4-6ae5-4d2a-98c3-f3b42980d267 connected
+[2026-02-15 22:03:01,254] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:03:01,254] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:03:01,258] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:03:01,258] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,259] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:01,259] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,259] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,259] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,261] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:01,293] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,293] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:01,293] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,722] INFO de.ihmels.ws.WebsocketService - Client acc963a4-6ae5-4d2a-98c3-f3b42980d267 disconnected
+[2026-02-15 22:03:01,723] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 494ms
+[2026-02-15 22:03:01,882] INFO de.ihmels.ws.WebsocketService - Client b86d3761-4c9e-4632-b89f-e641e02262da connected
+[2026-02-15 22:03:01,902] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:03:01,902] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:03:01,906] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:03:01,907] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,907] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:01,907] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,907] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,907] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,910] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:01,937] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:01,937] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:01,937] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:32,099] INFO de.ihmels.ws.WebsocketService - Client b86d3761-4c9e-4632-b89f-e641e02262da disconnected
+[2026-02-15 22:03:32,100] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 30218ms
+[2026-02-15 22:03:32,265] INFO de.ihmels.ws.WebsocketService - Client 057bf321-9348-40a3-8d6b-da638c78c0d6 connected
+[2026-02-15 22:03:32,287] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:03:32,287] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:03:32,292] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:03:32,292] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:32,292] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:32,293] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:32,293] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:32,293] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:32,297] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:32,320] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:32,320] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:32,321] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:34,435] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=20, columns=20, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:51,909] INFO de.ihmels.ws.WebsocketService - Client 057bf321-9348-40a3-8d6b-da638c78c0d6 disconnected
+[2026-02-15 22:03:51,913] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 19649ms
+[2026-02-15 22:03:52,076] INFO de.ihmels.ws.WebsocketService - Client c89b98ea-5c9c-42c0-b656-0a468a448ed6 connected
+[2026-02-15 22:03:52,101] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:03:52,101] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:03:52,106] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:03:52,106] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:52,106] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:52,107] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:52,107] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:52,107] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:52,109] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:52,133] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:52,133] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:52,133] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:52,861] INFO de.ihmels.ws.WebsocketService - Client c89b98ea-5c9c-42c0-b656-0a468a448ed6 disconnected
+[2026-02-15 22:03:52,862] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 788ms
+[2026-02-15 22:03:52,981] INFO de.ihmels.ws.WebsocketService - Client 07d01b66-2e41-4240-9561-9700e285f7de connected
+[2026-02-15 22:03:52,996] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:03:52,996] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:03:53,004] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:03:53,004] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:53,005] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:53,005] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:53,005] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:53,005] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:53,007] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:53,018] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:53,019] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:53,019] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:56,442] INFO de.ihmels.ws.WebsocketService - Client 07d01b66-2e41-4240-9561-9700e285f7de disconnected
+[2026-02-15 22:03:56,442] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 3462ms
+[2026-02-15 22:03:56,572] INFO de.ihmels.ws.WebsocketService - Client 99b24418-3016-4c5c-abb2-d6cdedfea0fd connected
+[2026-02-15 22:03:56,588] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:03:56,588] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:03:56,597] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:03:56,597] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:56,598] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:56,598] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:56,598] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:56,598] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:56,604] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:56,618] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:03:56,618] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:03:56,618] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:00,280] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=20, columns=20, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:06,282] INFO de.ihmels.ws.WebsocketService - Client 99b24418-3016-4c5c-abb2-d6cdedfea0fd disconnected
+[2026-02-15 22:04:06,285] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 9714ms
+[2026-02-15 22:04:06,473] INFO de.ihmels.ws.WebsocketService - Client 65d204f3-e1f5-481b-9d22-3ee3b1303efd connected
+[2026-02-15 22:04:06,498] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:04:06,499] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:04:06,503] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:04:06,503] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:06,504] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:06,504] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:06,504] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:06,504] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:06,507] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:06,537] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:06,537] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:06,538] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:06,974] INFO de.ihmels.ws.WebsocketService - Client 65d204f3-e1f5-481b-9d22-3ee3b1303efd disconnected
+[2026-02-15 22:04:06,975] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 504ms
+[2026-02-15 22:04:07,107] INFO de.ihmels.ws.WebsocketService - Client 09eedb43-8d15-46b5-beac-8ba8b55d3b05 connected
+[2026-02-15 22:04:07,129] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:04:07,129] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:04:07,134] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:04:07,134] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:07,135] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:07,135] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:07,135] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:07,135] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:07,137] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:07,169] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:07,169] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:07,169] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:07,772] INFO de.ihmels.ws.WebsocketService - Client 09eedb43-8d15-46b5-beac-8ba8b55d3b05 disconnected
+[2026-02-15 22:04:07,772] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 666ms
+[2026-02-15 22:04:07,969] INFO de.ihmels.ws.WebsocketService - Client 3c65de22-868d-4a27-a6b8-4cb15628ff11 connected
+[2026-02-15 22:04:08,003] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:04:08,003] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:04:08,007] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:04:08,007] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:08,010] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:08,010] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:08,011] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:08,011] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:08,014] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:08,053] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:08,053] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:08,053] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:09,473] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=20, columns=20, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:12,124] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=30, columns=30, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:20,129] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=10, columns=10, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:22,153] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=20, columns=20, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:30,794] INFO de.ihmels.ws.WebsocketService - Client 3c65de22-868d-4a27-a6b8-4cb15628ff11 disconnected
+[2026-02-15 22:04:30,799] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 22831ms
+[2026-02-15 22:04:30,978] INFO de.ihmels.ws.WebsocketService - Client af71fce7-9897-49fc-a366-65d7b6de6267 connected
+[2026-02-15 22:04:31,000] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:04:31,000] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:04:31,004] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:04:31,004] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:31,005] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:31,005] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:31,005] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:31,005] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:31,008] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:31,038] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:31,038] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:31,038] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:34,388] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=20, columns=20, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:35,721] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=30, columns=30, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:40,702] INFO de.ihmels.ws.WebsocketService - Client af71fce7-9897-49fc-a366-65d7b6de6267 disconnected
+[2026-02-15 22:04:40,703] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 9728ms
+[2026-02-15 22:04:40,878] INFO de.ihmels.ws.WebsocketService - Client 990c254b-2e16-4045-ad57-2f0110df5641 connected
+[2026-02-15 22:04:40,894] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:04:40,894] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:04:40,903] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:04:40,903] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:40,904] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:40,904] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:40,904] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:40,904] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:40,906] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:40,930] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:40,930] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:40,930] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:44,924] INFO de.ihmels.ws.WebsocketService - Client 990c254b-2e16-4045-ad57-2f0110df5641 disconnected
+[2026-02-15 22:04:44,925] INFO Application - [31m101 Switching Protocols[m: [36mGET[m - /rpcws/routeWebsocketServiceManager0 in 4048ms
+[2026-02-15 22:04:45,166] INFO de.ihmels.ws.WebsocketService - Client da5cd52b-7770-4543-8c93-04d6c1a3036e connected
+[2026-02-15 22:04:45,211] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$ResetMazeGrid@5bcf643f
+[2026-02-15 22:04:45,211] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetGeneratorAlgorithms@3ddec9ab
+[2026-02-15 22:04:45,216] INFO de.ihmels.ws.ClientHandler - Incoming message: de.ihmels.CMessageType$GetSolverAlgorithms@5237c88d
+[2026-02-15 22:04:45,216] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:45,216] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:45,217] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:45,217] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:45,217] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:45,220] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:45,254] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:45,254] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=15, columns=15, start=null, goal=null, initializer=-1))
+[2026-02-15 22:04:45,254] INFO de.ihmels.ws.ClientHandler - Incoming message: SetSpeed(speed=1)
+[2026-02-15 22:04:48,180] INFO de.ihmels.ws.ClientHandler - Incoming message: Generate(generatorId=0)
+[2026-02-15 22:04:51,674] INFO de.ihmels.ws.ClientHandler - Incoming message: UpdateMazeProperties(properties=MazeProperties(rows=30, columns=30, start=null, goal=null, initializer=-1))
