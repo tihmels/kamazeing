@@ -5,12 +5,12 @@ import io.kvision.html.ButtonStyle
 import io.kvision.html.Div
 import io.kvision.html.button
 import io.kvision.html.div
-import io.kvision.panel.vPanel
+import io.kvision.panel.flexPanel
 import io.kvision.utils.px
 
 fun Container.sidebar(block: Container.() -> Unit) {
 
-    vPanel(spacing = 5) {
+    flexPanel(FlexDirection.ROW, FlexWrap.WRAP, spacing = 5) {
         block()
     }
 
