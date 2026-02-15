@@ -264,16 +264,7 @@ html.dark-mode .maze-cell[style*="background"] {
 }
 
 .sidebar-col {
-  overflow-y: auto;
-  max-height: calc(100vh - 100px);
   padding: 15px;
-}
-
-@media (max-width: 1200px) {
-  .sidebar-col {
-    max-height: none;
-    overflow-y: visible;
-  }
 }
 
 @media (max-width: 992px) {
