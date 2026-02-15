@@ -249,20 +249,8 @@ html.dark-mode .maze-cell[style*="background"] {
    ============================================================ */
 
 .card {
-  flex: 1 1 100%;
+  flex: 1 1 280px;
   min-width: 0;
-}
-
-@media (min-width: 900px) {
-  .card {
-    flex: 1 1 calc(50% - 5px);
-  }
-}
-
-@media (min-width: 1400px) {
-  .card {
-    flex: 1 1 calc(33.333% - 5px);
-  }
 }
 
 @media (max-width: 768px) {
