@@ -27,7 +27,6 @@ import kotlinx.serialization.Serializable
 data class GeneratorForm(
     val selectedGenerator: String,
     val speed: String,
-    val comparisonMode: Boolean = false,
     val sizePreset: String = "50"
 )
 
@@ -84,18 +83,6 @@ private fun Div.getFormPanel(generators: Entities) = formPanel<GeneratorForm> {
                 if (!it.isNullOrBlank()) {
                     AppService.Request.updateGeneratorSpeed(it.toInt())
                 }
-            }
-        }
-    )
-
-    add(
-        GeneratorForm::comparisonMode, CheckBox(
-            label = "Comparison Mode",
-            value = false
-        ) {
-
-            subscribe {
-                StateFlowService.setComparisonMode(it ?: false)
             }
         }
     )
