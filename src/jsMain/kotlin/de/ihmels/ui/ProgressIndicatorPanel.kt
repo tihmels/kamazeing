@@ -17,8 +17,6 @@ fun Container.progressIndicatorPanel() {
         if (progress.totalCells > 0) {
             div(className = "progress-indicator-panel") {
 
-                h4("Progress")
-
                 div(className = "progress-stats") {
 
                     div(className = "stat-row") {
