@@ -108,11 +108,17 @@ private fun Container.appView() {
                     solverSettings(it)
                 }
 
-                progressIndicatorPanel()
+                sidebarCard("Progress", collapsible = true) {
+                    progressIndicatorPanel()
+                }
 
-                statisticsPanel()
+                sidebarCard("Statistics", collapsible = true) {
+                    statisticsPanel()
+                }
 
-                algorithmComparisonPanel()
+                sidebarCard("Comparison", collapsible = true) {
+                    algorithmComparisonPanel()
+                }
 
                 controlPanel()
 

@@ -18,8 +18,6 @@ fun Container.statisticsPanel() {
 
             div(className = "statistics-panel") {
 
-                h4("Recent Statistics")
-
                 val latest = statistics.last()
 
                 div(className = "stats-grid") {

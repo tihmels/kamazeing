@@ -17,8 +17,6 @@ fun Container.algorithmComparisonPanel() {
         if (comparison != null) {
             div(className = "comparison-panel") {
 
-                h4("Algorithm Comparison")
-
                 div(className = "comparison-container") {
 
                     div(className = "comparison-column") {
