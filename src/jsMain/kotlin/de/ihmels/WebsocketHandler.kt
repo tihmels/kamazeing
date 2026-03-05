@@ -17,16 +17,16 @@ enum class ConnectionState {
 }
 
 class WebsocketHandler(
-    private val messageHandler: (SMessage) -> Unit
+    private val messageHandler: (ResponseMessage) -> Unit
 ) : CoroutineScope by CoroutineScope(Dispatchers.Default) {
 
     internal val connectionState = ObservableValue(DISCONNECTED)
 
     private val websocketService: IWebsocketService = getService()
 
-    private val outgoingChannel: Channel<CMessage> = Channel()
+    private val outgoingChannel: Channel<RequestMessage> = Channel()
 
-    fun send(msg: CMessageType) = launch { outgoingChannel.send(CMessage(msg)) }
+    fun send(msg: RequestMessageType) = launch { outgoingChannel.send(RequestMessage(msg)) }
 
     fun connect() = launch {
 
@@ -43,8 +43,8 @@ class WebsocketHandler(
     }
 
     private suspend fun connectChannels(
-        output: SendChannel<CMessage>,
-        input: ReceiveChannel<SMessage>
+        output: SendChannel<RequestMessage>,
+        input: ReceiveChannel<ResponseMessage>
     ) {
         coroutineScope {
             launch {

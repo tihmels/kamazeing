@@ -1,6 +1,6 @@
 package de.ihmels
 
-import de.ihmels.CMessageType.*
+import de.ihmels.RequestMessageType.*
 
 object AppService {
 
@@ -12,43 +12,43 @@ object AppService {
 
     fun connectToServer() = websocketHandler.connect()
 
-    private fun messageHandler(message: SMessageType) = when (message) {
-        is SMessageType.UpdateMaze -> {
+    private fun messageHandler(message: ResponseMessageType) = when (message) {
+        is ResponseMessageType.UpdateMaze -> {
             StateService.updateMaze(message.maze)
             // Also update StateFlow for modern pattern testing
             StateFlowService.updateMaze(message.maze)
         }
-        is SMessageType.UpdateGeneratorState -> {
+        is ResponseMessageType.UpdateGeneratorState -> {
             StateService.updateGeneratorState(message.state)
             StateFlowService.updateGeneratorState(message.state)
         }
-        is SMessageType.UpdatePath -> {
+        is ResponseMessageType.UpdatePath -> {
             StateService.updatePath(message.path)
             StateFlowService.updatePath(message.path)
         }
-        is SMessageType.ResetMaze -> {
+        is ResponseMessageType.ResetMaze -> {
             StateService.resetMaze(message.maze)
             StateFlowService.resetMaze(message.maze)
         }
-        is SMessageType.Generators -> {
-            StateService.updateGeneratorAlgorithms(message.generators)
-            StateFlowService.updateGeneratorAlgorithms(message.generators)
+        is ResponseMessageType.Generators -> {
+            StateService.updateGeneratorAlgorithms(message.algorithms)
+            StateFlowService.updateGeneratorAlgorithms(message.algorithms)
         }
-        is SMessageType.Solvers -> {
-            StateService.updateSolverAlgorithms(message.solvers)
-            StateFlowService.updateSolverAlgorithms(message.solvers)
+        is ResponseMessageType.Solvers -> {
+            StateService.updateSolverAlgorithms(message.algorithms)
+            StateFlowService.updateSolverAlgorithms(message.algorithms)
         }
-        is SMessageType.UpdateSolverState -> {
+        is ResponseMessageType.UpdateSolverState -> {
             StateService.updateSolverState(message.state)
             StateFlowService.updateSolverState(message.state)
         }
-        is SMessageType.UpdateProgress -> {
+        is ResponseMessageType.UpdateProgress -> {
             StateFlowService.updateProgress(message.progress)
         }
-        is SMessageType.UpdateStatistics -> {
+        is ResponseMessageType.UpdateStatistics -> {
             StateFlowService.addStatistics(message.statistics)
         }
-        is SMessageType.UpdateComparison -> {
+        is ResponseMessageType.UpdateComparison -> {
             StateFlowService.updateComparison(message.result)
         }
     }
@@ -63,7 +63,12 @@ object AppService {
             start: Point2D? = null,
             goal: Point2D? = null,
             initialized: Int = -1,
-        ) = websocketHandler.send(UpdateMazeProperties(MazeProperties(rows, columns, start, goal, initialized)))
+        ) {
+            // When dimensions change, reset start/goal to prevent out-of-bounds errors
+            val resetStart = if (rows != null || columns != null) null else start
+            val resetGoal = if (rows != null || columns != null) null else goal
+            websocketHandler.send(UpdateMazeProperties(MazeProperties(rows, columns, resetStart, resetGoal, initialized)))
+        }
 
         fun generatorAction(action: GeneratorAction) =
             websocketHandler.send(action)
@@ -81,6 +86,10 @@ object AppService {
         fun updateSolverSpeed(speed: Int) {
             websocketHandler.send(SolverAction.SetSpeed(speed))
         }
+
+        fun skipGenerator() = websocketHandler.send(RequestMessageType.SkipGenerator)
+
+        fun skipSolver() = websocketHandler.send(RequestMessageType.SkipSolver)
 
     }
 

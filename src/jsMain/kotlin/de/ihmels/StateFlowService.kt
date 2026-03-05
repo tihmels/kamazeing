@@ -40,13 +40,13 @@ object StateFlowService {
         val generatorState: FlowState = FlowState.IDLE,
         val solverState: FlowState = FlowState.IDLE,
         val solutionPath: List<Point2D> = emptyList(),
-        val generatorAlgorithms: Entities = Entities(),
-        val solverAlgorithms: Entities = Entities(),
+        val generatorAlgorithms: AlgorithmOptions = AlgorithmOptions(),
+        val solverAlgorithms: AlgorithmOptions = AlgorithmOptions(),
         val progressStats: ProgressData = ProgressData(),
         val statistics: List<StatisticsData> = emptyList(),
         val comparisonMode: Boolean = false,
         val comparisonResult: ComparisonResult? = null,
-        val currentSpeed: Int = 500, // milliseconds per step
+        val currentSpeed: Int = 500,
         val stepThroughMode: Boolean = false
     )
 
@@ -99,11 +99,11 @@ object StateFlowService {
         )
     }
 
-    fun updateGeneratorAlgorithms(generators: Entities) {
+    fun updateGeneratorAlgorithms(generators: AlgorithmOptions) {
         _mazeState.value = _mazeState.value.copy(generatorAlgorithms = generators)
     }
 
-    fun updateSolverAlgorithms(solvers: Entities) {
+    fun updateSolverAlgorithms(solvers: AlgorithmOptions) {
         _mazeState.value = _mazeState.value.copy(solverAlgorithms = solvers)
     }
 

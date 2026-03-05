@@ -1,6 +1,9 @@
 package de.ihmels
 
 import de.ihmels.ui.*
+import de.ihmels.ui.panels.*
+import de.ihmels.ui.settings.*
+import de.ihmels.ui.common.*
 import io.kvision.*
 import io.kvision.core.*
 import io.kvision.html.button
@@ -10,34 +13,29 @@ import io.kvision.html.h5
 import io.kvision.panel.ContainerType
 import io.kvision.panel.flexPanel
 import io.kvision.panel.root
-import io.kvision.core.FlexWrap
-import io.kvision.core.FlexDirection
-import io.kvision.core.AlignItems
 import io.kvision.utils.px
 import io.kvision.state.bind
 import io.kvision.state.sub
+import io.kvision.state.insertNotNull
 import io.kvision.utils.perc
 
 class App : Application() {
 
     init {
+        @Suppress("UNUSED_EXPRESSION")
         kvappCss
     }
 
     override fun start() {
-
         AppService.connectToServer()
 
         root("kvapp", containerType = ContainerType.FIXED) {
-
-            bind(AppService.connectionState) {
-
-                header(it == ConnectionState.CONNECTED)
-
-                when (it) {
+            bind(AppService.connectionState) { connectionState ->
+                header(connectionState == ConnectionState.CONNECTED)
+                when (connectionState) {
                     ConnectionState.CONNECTED -> appView()
-                    ConnectionState.ESTABLISHING -> establishingView()
-                    ConnectionState.DISCONNECTED -> disconnectedView()
+                    ConnectionState.ESTABLISHING -> centeredStatusView("Establishing Connection ...")
+                    ConnectionState.DISCONNECTED -> centeredStatusView("Disconnected")
                 }
             }
         }
@@ -45,33 +43,25 @@ class App : Application() {
 }
 
 private fun Container.header(connected: Boolean) {
-
     div(className = "my-3 row border-bottom no-gutter") {
-
         div(className = "col") {
             h1("Kamazeing")
         }
 
         if (connected) {
-
             div(className = "col-auto") {
-
-                flexPanel(justify = JustifyContent.FLEXEND, alignItems = AlignItems.CENTER, spacing = 7) {
-
+                flexPanel(
+                    justify = JustifyContent.FLEXEND,
+                    alignItems = AlignItems.CENTER,
+                    spacing = 7
+                ) {
                     height = 100.perc
 
-                    button("Settings") {
-                        title = "Change maze dimensions"
-                        enableTooltip()
-                    }.onClick {
-
+                    headerButton("Settings", "Change maze dimensions") {
                         SettingsModal().show()
                     }
 
-                    button("Reset") {
-                        title = "Reset cells"
-                        enableTooltip()
-                    }.onClick {
+                    headerButton("Reset", "Reset cells") {
                         AppService.Request.resetMaze()
                     }
                 }
@@ -80,87 +70,78 @@ private fun Container.header(connected: Boolean) {
     }
 }
 
+private fun Container.headerButton(
+    label: String,
+    tooltip: String,
+    action: () -> Unit
+) {
+    button(label).apply {
+        title = tooltip
+        enableTooltip()
+    }.onClick { action() }
+}
+
 private fun Container.appView() {
-
     AppService.Request.resetMaze()
-
     AppService.Request.getGeneratorAlgorithms()
     AppService.Request.getSolverAlgorithms()
-
-    val mazeState = StateService.mazeState.sub { it.maze }
 
     flexPanel(
         FlexDirection.ROW,
         FlexWrap.WRAP,
         alignItems = AlignItems.FLEXSTART
     ) {
-
-        add(div {
-            bind(mazeState) {
-                if (it != null) {
-                    val panel = mazePanel(it)
+        add(
+            div {
+                insertNotNull(StateService.mazeState.sub { it.maze }) {
+                    mazePanel(it)
                 }
-            }
-        }, grow = 1, basis = 300.px)
+            },
+            grow = 1,
+            basis = 300.px
+        )
 
-        add(div {
-            val generatorStore = StateService.mazeState.sub { it.generatorAlgorithms }
-            val solverStore = StateService.mazeState.sub { it.solverAlgorithms }
+        add(
+            div {
+                sidebar {
+                    sidebarCard("Generator") {
+                        div().bind(StateService.mazeState.sub { it.generatorAlgorithms }) {
+                            generatorSettings(it)
+                        }
+                    }
 
-            sidebar {
+                    sidebarCard("Solver") {
+                        div().bind(StateService.mazeState.sub { it.solverAlgorithms }) {
+                            solverSettings(it)
+                        }
+                    }
 
-                sidebarCard("Generator") {
-                    div().bind(generatorStore) {
-                        generatorSettings(it)
+                    sidebarCard("Progress", collapsible = true) {
+                        progressIndicatorPanel()
+                    }
+
+                    sidebarCard("Statistics", collapsible = true) {
+                        statisticsPanel()
+                    }
+
+                    sidebarCard("Comparison", collapsible = true) {
+                        algorithmComparisonPanel()
                     }
                 }
-
-                sidebarCard("Solver") {
-                    div().bind(solverStore) {
-                        solverSettings(it)
-                    }
-                }
-
-                sidebarCard("Progress", collapsible = true) {
-                    progressIndicatorPanel()
-                }
-
-                sidebarCard("Statistics", collapsible = true) {
-                    statisticsPanel()
-                }
-
-                sidebarCard("Comparison", collapsible = true) {
-                    algorithmComparisonPanel()
-                }
-
-            }
-        }, basis = 400.px)
-
+            },
+            basis = 480.px
+        )
     }
-
 }
 
-private fun Container.establishingView() {
-
+private fun Container.centeredStatusView(title: String) {
     flexPanel(
         justify = JustifyContent.CENTER,
         alignContent = AlignContent.CENTER,
         alignItems = AlignItems.CENTER,
         direction = FlexDirection.COLUMN
     ) {
-        h5("Establishing Connection ...")
-    }
-
-}
-
-private fun Container.disconnectedView() {
-    flexPanel(
-        justify = JustifyContent.CENTER,
-        alignContent = AlignContent.CENTER,
-        alignItems = AlignItems.CENTER,
-        direction = FlexDirection.COLUMN
-    ) {
-        h5("Disconnected")
+        h5(title)
     }
 }
 

@@ -1,13 +1,14 @@
 package de.ihmels.ws
 
 import de.ihmels.*
-import de.ihmels.CMessageType.*
-import de.ihmels.SMessageType.*
+import de.ihmels.RequestMessageType.*
+import de.ihmels.ResponseMessageType.*
 import de.ihmels.maze.generator.factory.Generator
 import de.ihmels.maze.solver.factory.Solver
 import de.ihmels.maze.solver.toList
 import de.ihmels.skippable.GeneratorStateFlow
 import de.ihmels.skippable.SolverStateFlow
+import de.ihmels.utils.SpeedConverter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlin.reflect.KMutableProperty0
@@ -44,7 +45,7 @@ class ClientHandler(private val client: Client) : Logging {
 
     }
 
-    private suspend fun handle(cMessage: CMessageType) =
+    private suspend fun handle(cMessage: RequestMessageType) =
         when (cMessage) {
             GetGeneratorAlgorithms -> sendGeneratorAlgorithms()
             GetSolverAlgorithms -> sendSolverAlgorithms()
@@ -54,32 +55,25 @@ class ClientHandler(private val client: Client) : Logging {
             is GeneratorAction.CompareGenerators -> compareGenerators(cMessage)
             is GeneratorAction.Cancel -> generator.cancel()
             is GeneratorAction.SetSpeed -> setGeneratorSpeed(cMessage.speed)
+            RequestMessageType.SkipGenerator -> generator.skip()
             is SolverAction.Solve -> solve(cMessage)
             is SolverAction.Cancel -> solver.cancel()
             is SolverAction.SetSpeed -> setSolverSpeed(cMessage.speed)
+            RequestMessageType.SkipSolver -> solver.skip()
         }
 
     private suspend fun sendGeneratorAlgorithms() =
-        client.send(Generators(Entities(Generator.toEntities(), Generator.default().id)))
+        client.send(Generators(AlgorithmOptions(Generator.toEntities(), Generator.default().id)))
 
     private suspend fun sendSolverAlgorithms() =
-        client.send(Solvers(Entities(Solver.toEntities(), Solver.default().id)))
+        client.send(Solvers(AlgorithmOptions(Solver.toEntities(), Solver.default().id)))
 
     private fun setSolverSpeed(speed: Int) {
-        solverDelay = speedToDelay(speed)
+        solverDelay = SpeedConverter.speedLevelToDelay(speed)
     }
 
     private fun setGeneratorSpeed(speed: Int) {
-        generatorDelay = speedToDelay(speed)
-    }
-
-    private companion object {
-        fun speedToDelay(speed: Int): Long = when (speed) {
-            1 -> 300L
-            2 -> 200L
-            3 -> 100L
-            else -> 200L
-        }
+        generatorDelay = SpeedConverter.speedLevelToDelay(speed)
     }
 
     private suspend fun resetMaze() = clearScope(scope) {
@@ -114,59 +108,31 @@ class ClientHandler(private val client: Client) : Logging {
     private suspend fun generate(message: GeneratorAction.Generate) = clearScope(scope) {
 
         val newState = Intent.ResetMaze.reduce(_store.value)
-
         _store.value = newState
 
         var totalTime: Long = 0
+        var lastProgressUpdate = 0L
 
         generator.execute(newState.maze, message.generatorId) {
-
             val startTime = System.currentTimeMillis()
-            var lastProgressUpdate = 0L
 
             this.delay(::generatorDelay)
                 .onEach { maze ->
-
                     totalTime = System.currentTimeMillis() - startTime
-
-                    if (totalTime - lastProgressUpdate >= 200) {
-                        val visitedCells = maze.cells.count { !it.isClosed() }
-                        val totalCells = maze.cells.size
-                        val percentComplete = (visitedCells.toDouble() / totalCells) * 100
-
-                        client.send(
-                            UpdateProgress(
-                                ProgressData(
-                                    cellsProcessed = visitedCells,
-                                    totalCells = totalCells,
-                                    percentComplete = percentComplete,
-                                    elapsedMs = totalTime
-                                )
-                            )
-                        )
-
-                        lastProgressUpdate = totalTime
-                    }
+                    lastProgressUpdate = ProgressReporter.reportProgress(maze, totalTime, lastProgressUpdate, client)
 
                     _store.value = Intent.UpdateMaze(maze).reduce(_store.value)
                     client.send(UpdateMaze(maze.toDto()))
                 }
         }
 
-        val finalState = _store.value
-        val finalMaze = finalState.maze
-        val visitedCells = finalMaze.cells.count { !it.isClosed() }
-        val totalCells = finalMaze.cells.size
-        val efficiency = (visitedCells.toDouble() / totalCells) * 100
-
+        val finalMaze = _store.value.maze
         client.send(
             UpdateStatistics(
-                StatisticsData(
+                ProgressReporter.createStatistics(
                     algorithmName = "Generator ${message.generatorId}",
                     durationMs = totalTime,
-                    cellsProcessed = visitedCells,
-                    pathLength = 0,
-                    efficiency = efficiency,
+                    maze = finalMaze,
                     algorithmType = "generator"
                 )
             )
@@ -183,22 +149,20 @@ class ClientHandler(private val client: Client) : Logging {
             var totalTime: Long = 0
             var pathLength = 0
             var visitedCount = 0
+            var lastProgressUpdate = 0L
 
             solver.execute(currentState.maze, message.solverId) {
-
                 val startTime = System.currentTimeMillis()
-                var lastProgressUpdate = 0L
 
                 this.delay(::solverDelay)
                     .filterNotNull()
                     .onEach { path ->
-
                         totalTime = System.currentTimeMillis() - startTime
                         visitedCount++
                         pathLength = path.toList().size
 
                         if (totalTime - lastProgressUpdate >= 200) {
-                            val totalCells = currentState.maze.cells.size
+                            val totalCells = currentState.maze.size
                             val percentComplete = (visitedCount.toDouble() / totalCells) * 100
 
                             client.send(
@@ -220,17 +184,13 @@ class ClientHandler(private val client: Client) : Logging {
                     }
             }
 
-            val totalCells = currentState.maze.cells.size
-            val efficiency = (visitedCount.toDouble() / totalCells) * 100
-
             client.send(
                 UpdateStatistics(
-                    StatisticsData(
+                    ProgressReporter.createStatistics(
                         algorithmName = "Solver ${message.solverId}",
                         durationMs = totalTime,
-                        cellsProcessed = visitedCount,
+                        maze = currentState.maze,
                         pathLength = pathLength,
-                        efficiency = efficiency,
                         algorithmType = "solver"
                     )
                 )
@@ -247,115 +207,57 @@ class ClientHandler(private val client: Client) : Logging {
         val gen2Name = generators.find { it.id == message.generator2Id }?.name ?: "Generator ${message.generator2Id}"
 
         var totalTime1 = 0L
-        var visitedCells1 = 0
-        var totalCells1 = 0
-        var efficiency1 = 0.0
-
+        var lastProgressUpdate1 = 0L
         val newState = Intent.ResetMaze.reduce(_store.value)
         _store.value = newState
 
         generator.execute(newState.maze, message.generator1Id) {
             val startTime = System.currentTimeMillis()
-            var lastProgressUpdate = 0L
 
             this.delay(::generatorDelay)
                 .onEach { maze ->
-
                     totalTime1 = System.currentTimeMillis() - startTime
-
-                    if (totalTime1 - lastProgressUpdate >= 200) {
-                        visitedCells1 = maze.cells.count { !it.isClosed() }
-                        totalCells1 = maze.cells.size
-                        val percentComplete = (visitedCells1.toDouble() / totalCells1) * 100
-
-                        client.send(
-                            UpdateProgress(
-                                ProgressData(
-                                    cellsProcessed = visitedCells1,
-                                    totalCells = totalCells1,
-                                    percentComplete = percentComplete,
-                                    elapsedMs = totalTime1
-                                )
-                            )
-                        )
-
-                        lastProgressUpdate = totalTime1
-                    }
+                    lastProgressUpdate1 = ProgressReporter.reportProgress(maze, totalTime1, lastProgressUpdate1, client)
 
                     _store.value = Intent.UpdateMaze(maze).reduce(_store.value)
                     client.send(UpdateMaze(maze.toDto()))
                 }
         }
 
-        visitedCells1 = _store.value.maze.cells.count { !it.isClosed() }
-        totalCells1 = _store.value.maze.cells.size
-        efficiency1 = (visitedCells1.toDouble() / totalCells1) * 100
-
-        val stats1 = StatisticsData(
+        val stats1 = ProgressReporter.createStatistics(
             algorithmName = gen1Name,
             durationMs = totalTime1,
-            cellsProcessed = visitedCells1,
-            pathLength = 0,
-            efficiency = efficiency1,
+            maze = _store.value.maze,
             algorithmType = "generator"
         )
 
         var totalTime2 = 0L
-        var visitedCells2 = 0
-        var totalCells2 = 0
-        var efficiency2 = 0.0
-
+        var lastProgressUpdate2 = 0L
         val resetState = Intent.ResetMaze.reduce(_store.value)
         _store.value = resetState
 
         generator.execute(resetState.maze, message.generator2Id) {
             val startTime = System.currentTimeMillis()
-            var lastProgressUpdate = 0L
 
             this.delay(::generatorDelay)
                 .onEach { maze ->
-
                     totalTime2 = System.currentTimeMillis() - startTime
-
-                    if (totalTime2 - lastProgressUpdate >= 200) {
-                        visitedCells2 = maze.cells.count { !it.isClosed() }
-                        totalCells2 = maze.cells.size
-                        val percentComplete = (visitedCells2.toDouble() / totalCells2) * 100
-
-                        client.send(
-                            UpdateProgress(
-                                ProgressData(
-                                    cellsProcessed = visitedCells2,
-                                    totalCells = totalCells2,
-                                    percentComplete = percentComplete,
-                                    elapsedMs = totalTime2
-                                )
-                            )
-                        )
-
-                        lastProgressUpdate = totalTime2
-                    }
+                    lastProgressUpdate2 = ProgressReporter.reportProgress(maze, totalTime2, lastProgressUpdate2, client)
 
                     _store.value = Intent.UpdateMaze(maze).reduce(_store.value)
                     client.send(UpdateMaze(maze.toDto()))
                 }
         }
 
-        visitedCells2 = _store.value.maze.cells.count { !it.isClosed() }
-        totalCells2 = _store.value.maze.cells.size
-        efficiency2 = (visitedCells2.toDouble() / totalCells2) * 100
-
-        val stats2 = StatisticsData(
+        val stats2 = ProgressReporter.createStatistics(
             algorithmName = gen2Name,
             durationMs = totalTime2,
-            cellsProcessed = visitedCells2,
-            pathLength = 0,
-            efficiency = efficiency2,
+            maze = _store.value.maze,
             algorithmType = "generator"
         )
 
         val winner = when {
-            efficiency1 != efficiency2 -> if (efficiency1 > efficiency2) gen1Name else gen2Name
+            stats1.efficiency != stats2.efficiency -> if (stats1.efficiency > stats2.efficiency) gen1Name else gen2Name
             totalTime1 != totalTime2 -> if (totalTime1 < totalTime2) gen1Name else gen2Name
             else -> ""
         }
