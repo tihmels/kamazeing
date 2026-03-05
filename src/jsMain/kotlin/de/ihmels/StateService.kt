@@ -1,6 +1,6 @@
 package de.ihmels
 
-import de.ihmels.ui.GeneratorForm
+import de.ihmels.ui.settings.GeneratorForm
 import io.kvision.form.FormPanel
 import io.kvision.redux.RAction
 import io.kvision.redux.createTypedReduxStore
@@ -11,8 +11,8 @@ data class ClientState(
     val generatorState: FlowState = FlowState.IDLE,
     val solverState: FlowState = FlowState.IDLE,
     val solutionPath: List<Point2D> = emptyList(),
-    val generatorAlgorithms: Entities = Entities(),
-    val solverAlgorithms: Entities = Entities()
+    val generatorAlgorithms: AlgorithmOptions = AlgorithmOptions(),
+    val solverAlgorithms: AlgorithmOptions = AlgorithmOptions()
 )
 
 object StateService {
@@ -25,8 +25,8 @@ object StateService {
         data class UpdateMaze(val maze: MazeDto) : StateAction()
         data class UpdatePath(val path: List<Point2D>) : StateAction()
         data class UpdateGeneratorState(val state: FlowState) : StateAction()
-        data class UpdateGenerators(val generators: Entities) : StateAction()
-        data class UpdateSolvers(val solvers: Entities) : StateAction()
+        data class UpdateGenerators(val generators: AlgorithmOptions) : StateAction()
+        data class UpdateSolvers(val solvers: AlgorithmOptions) : StateAction()
         data class UpdateSolverState(val state: FlowState) : StateAction()
         data class ResetMaze(val maze: MazeDto) : StateAction()
     }
@@ -55,8 +55,8 @@ object StateService {
     fun updatePath(path: List<Point2D>) = mazeState.dispatch(StateAction.UpdatePath(path))
     fun updateGeneratorState(state: FlowState) = mazeState.dispatch(StateAction.UpdateGeneratorState(state))
     fun resetMaze(maze: MazeDto) = mazeState.dispatch(StateAction.ResetMaze(maze))
-    fun updateSolverAlgorithms(solvers: Entities) = mazeState.dispatch(StateAction.UpdateSolvers(solvers))
-    fun updateGeneratorAlgorithms(generators: Entities) = mazeState.dispatch(StateAction.UpdateGenerators(generators))
+    fun updateSolverAlgorithms(solvers: AlgorithmOptions) = mazeState.dispatch(StateAction.UpdateSolvers(solvers))
+    fun updateGeneratorAlgorithms(generators: AlgorithmOptions) = mazeState.dispatch(StateAction.UpdateGenerators(generators))
     fun updateSolverState(state: FlowState) = mazeState.dispatch(StateAction.UpdateSolverState(state))
 
 }

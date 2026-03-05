@@ -1,10 +1,12 @@
-package de.ihmels.ui
+package de.ihmels.ui.settings
 
 import de.ihmels.AppService
-import de.ihmels.CMessageType.SolverAction
-import de.ihmels.Entities
+import de.ihmels.RequestMessageType.SolverAction
+import de.ihmels.AlgorithmOptions
 import de.ihmels.FlowState
 import de.ihmels.StateService
+import de.ihmels.ui.solverStatusBadge
+import io.kvision.core.AlignItems
 import io.kvision.core.Container
 import io.kvision.core.JustifyContent
 import io.kvision.core.StringPair
@@ -23,7 +25,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SolverForm(val selectedSolver: String, val speed: String)
 
-fun Container.solverSettings(solvers: Entities) {
+fun Container.solverSettings(solvers: AlgorithmOptions) {
 
     lateinit var form: FormPanel<SolverForm>
 
@@ -31,11 +33,19 @@ fun Container.solverSettings(solvers: Entities) {
         form = getFormPanel(solvers)
     }
 
-    hPanel(justify = JustifyContent.STRETCH, spacing = 5) {
+    hPanel(justify = JustifyContent.STRETCH, alignItems = AlignItems.CENTER, spacing = 5) {
 
         button("Cancel", style = ButtonStyle.DANGER, className = "flex-one") {
             onClick {
                 AppService.Request.solverAction(SolverAction.Cancel)
+            }
+        }.bind(StateService.mazeState) {
+            disabled = it.solverState == FlowState.IDLE
+        }
+
+        button("Skip", className = "flex-one") {
+            onClick {
+                AppService.Request.skipSolver()
             }
         }.bind(StateService.mazeState) {
             disabled = it.solverState == FlowState.IDLE
@@ -49,14 +59,17 @@ fun Container.solverSettings(solvers: Entities) {
         }.bind(StateService.mazeState) {
             disabled = it.solverState == FlowState.RUNNING || it.initialized == false
         }
+
+        // Status badge
+        solverStatusBadge()
     }
 
 }
 
-private fun Div.getFormPanel(solvers: Entities) = formPanel<SolverForm> {
+private fun Div.getFormPanel(solvers: AlgorithmOptions) = formPanel<SolverForm> {
 
-    val solverStringPairs = solvers.entities.map { StringPair(it.id.toString(), it.name) }.sortedBy { it.second }
-    val default = solvers.default?.toString() ?: solverStringPairs.firstOrNull()?.first
+    val solverStringPairs = solvers.options.map { StringPair(it.id.toString(), it.name) }.sortedBy { it.second }
+    val default = solvers.defaultId?.toString() ?: solverStringPairs.firstOrNull()?.first
 
     add(SolverForm::selectedSolver, TomSelect(solverStringPairs, value = default))
 

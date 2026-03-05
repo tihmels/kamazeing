@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 abstract class MazeStateFlowExecutor<T>(private val scope: CoroutineScope) {
 
@@ -13,15 +14,33 @@ abstract class MazeStateFlowExecutor<T>(private val scope: CoroutineScope) {
     val state = _state.asStateFlow()
 
     private var flowJob: Job? = null
+    private val skipRequested = AtomicBoolean(false)
 
     open fun execute(maze: Maze, id: Int, flowExtension: (Flow<T>).() -> Flow<*> = { this }) {
 
         val flowProvider = getMazeFlowProvider(id)
+        skipRequested.set(false)
 
-        flowJob = flowProvider(maze)
+        flowJob = flow {
+            var lastNonNullValue: T? = null
+            flowProvider(maze).collect { value ->
+                if (value != null) {
+                    lastNonNullValue = value
+                }
+                if (!skipRequested.get()) {
+                    emit(value)
+                }
+            }
+
+            if (skipRequested.get() && lastNonNullValue != null) {
+                @Suppress("UNCHECKED_CAST")
+                emit(lastNonNullValue as T)
+            }
+        }
             .onStart {
                 _state.value = FlowState.RUNNING
-            }.onCompletion {
+            }
+            .onCompletion {
                 _state.value = FlowState.IDLE
                 flowJob = null
             }
@@ -35,6 +54,12 @@ abstract class MazeStateFlowExecutor<T>(private val scope: CoroutineScope) {
     suspend fun cancel() {
         if (_state.value == FlowState.RUNNING) {
             flowJob?.cancelAndJoin()
+        }
+    }
+
+    fun skip() {
+        if (_state.value == FlowState.RUNNING) {
+            skipRequested.set(true)
         }
     }
 

@@ -1,4 +1,4 @@
-package de.ihmels.ui
+package de.ihmels.ui.common
 
 import io.kvision.core.*
 import io.kvision.html.ButtonStyle

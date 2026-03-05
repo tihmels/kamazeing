@@ -53,7 +53,7 @@ class CellDto(
 data class IdAndName(val id: Int, val name: String)
 
 @Serializable
-data class Entities(val entities: List<IdAndName> = emptyList(), val default: Int? = null)
+data class AlgorithmOptions(val options: List<IdAndName> = emptyList(), val defaultId: Int? = null)
 
 @Serializable
 data class MazeDto(val rows: Int, val columns: Int, val start: Point2D, val goal: Point2D, val grid: List<CellDto>)
@@ -73,13 +73,13 @@ data class MazeProperties(
 )
 
 @Serializable
-data class CMessage(val messageType: CMessageType)
+data class RequestMessage(val messageType: RequestMessageType)
 
 @Serializable
-sealed class CMessageType {
+sealed class RequestMessageType {
 
     @Serializable
-    sealed class GeneratorAction : CMessageType() {
+    sealed class GeneratorAction : RequestMessageType() {
 
         @Serializable
         data class Generate(val generatorId: Int) : GeneratorAction()
@@ -96,7 +96,7 @@ sealed class CMessageType {
     }
 
     @Serializable
-    sealed class SolverAction : CMessageType() {
+    sealed class SolverAction : RequestMessageType() {
 
         @Serializable
         data class Solve(val solverId: Int) : SolverAction()
@@ -110,23 +110,29 @@ sealed class CMessageType {
     }
 
     @Serializable
-    object GetGeneratorAlgorithms : CMessageType()
+    object GetGeneratorAlgorithms : RequestMessageType()
 
     @Serializable
-    object GetSolverAlgorithms : CMessageType()
+    object GetSolverAlgorithms : RequestMessageType()
 
     @Serializable
     data class UpdateMazeProperties(
         val properties: MazeProperties
-    ) : CMessageType()
+    ) : RequestMessageType()
 
     @Serializable
-    object ResetMazeGrid : CMessageType()
+    object ResetMazeGrid : RequestMessageType()
+
+    @Serializable
+    object SkipGenerator : RequestMessageType()
+
+    @Serializable
+    object SkipSolver : RequestMessageType()
 
 }
 
 @Serializable
-data class SMessage(val messageType: SMessageType)
+data class ResponseMessage(val messageType: ResponseMessageType)
 
 @Serializable
 data class ProgressData(
@@ -156,36 +162,36 @@ data class ComparisonResult(
 )
 
 @Serializable
-sealed class SMessageType {
+sealed class ResponseMessageType {
 
     @Serializable
-    data class UpdateGeneratorState(val state: FlowState) : SMessageType()
+    data class UpdateGeneratorState(val state: FlowState) : ResponseMessageType()
 
     @Serializable
-    data class UpdateSolverState(val state: FlowState) : SMessageType()
+    data class UpdateSolverState(val state: FlowState) : ResponseMessageType()
 
     @Serializable
-    data class ResetMaze(val maze: MazeDto) : SMessageType()
+    data class ResetMaze(val maze: MazeDto) : ResponseMessageType()
 
     @Serializable
-    data class UpdateMaze(val maze: MazeDto) : SMessageType()
+    data class UpdateMaze(val maze: MazeDto) : ResponseMessageType()
 
     @Serializable
-    data class Generators(val generators: Entities) : SMessageType()
+    data class Generators(val algorithms: AlgorithmOptions) : ResponseMessageType()
 
     @Serializable
-    data class Solvers(val solvers: Entities) : SMessageType()
+    data class Solvers(val algorithms: AlgorithmOptions) : ResponseMessageType()
 
     @Serializable
-    data class UpdatePath(val path: List<Point2D>) : SMessageType()
+    data class UpdatePath(val path: List<Point2D>) : ResponseMessageType()
 
     @Serializable
-    data class UpdateProgress(val progress: ProgressData) : SMessageType()
+    data class UpdateProgress(val progress: ProgressData) : ResponseMessageType()
 
     @Serializable
-    data class UpdateStatistics(val statistics: StatisticsData) : SMessageType()
+    data class UpdateStatistics(val statistics: StatisticsData) : ResponseMessageType()
 
     @Serializable
-    data class UpdateComparison(val result: ComparisonResult) : SMessageType()
+    data class UpdateComparison(val result: ComparisonResult) : ResponseMessageType()
 
 }

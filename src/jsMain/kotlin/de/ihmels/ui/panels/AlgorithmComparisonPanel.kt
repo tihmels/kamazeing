@@ -1,10 +1,11 @@
-package de.ihmels.ui
+package de.ihmels.ui.panels
 
 import de.ihmels.ComparisonResult
 import de.ihmels.StateFlowService
+import de.ihmels.StatisticsData
+import de.ihmels.utils.formatTime
 import io.kvision.core.Container
 import io.kvision.html.div
-import io.kvision.html.h4
 import io.kvision.html.span
 import io.kvision.state.bind
 import kotlin.math.roundToInt
@@ -51,7 +52,7 @@ fun Container.algorithmComparisonPanel() {
 
 }
 
-private fun Container.comparisonStats(stats: de.ihmels.StatisticsData, isWinner: Boolean) {
+private fun Container.comparisonStats(stats: StatisticsData, isWinner: Boolean) {
 
     div(className = "comparison-stats ${if (isWinner) "winner" else ""}") {
 
@@ -79,16 +80,4 @@ private fun Container.comparisonStats(stats: de.ihmels.StatisticsData, isWinner:
 
     }
 
-}
-
-private fun formatTime(ms: Long): String {
-    return when {
-        ms < 1000 -> "${ms}ms"
-        ms < 60000 -> "${(ms / 1000.0).roundToInt()}s"
-        else -> {
-            val minutes = ms / 60000
-            val seconds = (ms % 60000) / 1000
-            "${minutes}m ${seconds}s"
-        }
-    }
 }

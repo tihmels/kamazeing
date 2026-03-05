@@ -1,15 +1,15 @@
-package de.ihmels.ui
+package de.ihmels.ui.settings
 
 import de.ihmels.AppService
-import de.ihmels.CMessageType.GeneratorAction
-import de.ihmels.Entities
+import de.ihmels.RequestMessageType.GeneratorAction
+import de.ihmels.AlgorithmOptions
 import de.ihmels.FlowState
-import de.ihmels.StateFlowService
 import de.ihmels.StateService
+import de.ihmels.ui.generatorStatusBadge
+import io.kvision.core.AlignItems
 import io.kvision.core.Container
 import io.kvision.core.JustifyContent
 import io.kvision.core.StringPair
-import io.kvision.form.check.CheckBox
 import io.kvision.form.check.RadioGroup
 import io.kvision.form.formPanel
 import io.kvision.form.select.TomSelect
@@ -30,7 +30,7 @@ data class GeneratorForm(
     val sizePreset: String = "50"
 )
 
-fun Container.generatorSettings(generators: Entities) {
+fun Container.generatorSettings(generators: AlgorithmOptions) {
 
     div {
         StateService.generatorForm = getFormPanel(generators)
@@ -38,11 +38,19 @@ fun Container.generatorSettings(generators: Entities) {
 
     val generatorState = StateService.mazeState.sub { it.generatorState }
 
-    hPanel(justify = JustifyContent.STRETCH, spacing = 5) {
+    hPanel(justify = JustifyContent.STRETCH, alignItems = AlignItems.CENTER, spacing = 5) {
 
         button("Cancel", style = ButtonStyle.DANGER, className = "flex-one") {
             onClick {
                 AppService.Request.generatorAction(GeneratorAction.Cancel)
+            }
+        }.bind(generatorState) {
+            disabled = it == FlowState.IDLE
+        }
+
+        button("Skip", className = "flex-one") {
+            onClick {
+                AppService.Request.skipGenerator()
             }
         }.bind(generatorState) {
             disabled = it == FlowState.IDLE
@@ -56,14 +64,17 @@ fun Container.generatorSettings(generators: Entities) {
         }.bind(generatorState) {
             disabled = it == FlowState.RUNNING
         }
+
+        // Status badge
+        generatorStatusBadge()
     }
 
 }
 
-private fun Div.getFormPanel(generators: Entities) = formPanel<GeneratorForm> {
+private fun Div.getFormPanel(generators: AlgorithmOptions) = formPanel<GeneratorForm> {
 
-    val generatorStringPairs = generators.entities.map { StringPair(it.id.toString(), it.name) }.sortedBy { it.second }
-    val default = generators.default?.toString() ?: generatorStringPairs.firstOrNull()?.first
+    val generatorStringPairs = generators.options.map { StringPair(it.id.toString(), it.name) }.sortedBy { it.second }
+    val default = generators.defaultId?.toString() ?: generatorStringPairs.firstOrNull()?.first
 
     add(
         GeneratorForm::selectedGenerator,

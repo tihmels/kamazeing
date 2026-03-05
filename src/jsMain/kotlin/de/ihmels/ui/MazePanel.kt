@@ -10,18 +10,23 @@ import io.kvision.panel.gridPanel
 import io.kvision.state.bind
 import io.kvision.state.sub
 import io.kvision.utils.px
+import org.w3c.dom.DragEvent
+import org.w3c.dom.events.Event
 
 const val cellSize = 50
 
-const val START_IMG = "go.png"
-const val GOAL_IMG = "flag.png"
+const val START_IMG = "play-circle.svg"
+const val GOAL_IMG = "target.svg"
 
 const val STEP_UP = "step-up.png"
 const val STEP_RIGHT = "step-right.png"
 const val STEP_DOWN = "step-down.png"
 const val STEP_LEFT = "step-left.png"
 
-val cellBorder = Border(1.px, BorderStyle.SOLID, Color.hex(0x606060))
+// Beveled wall colors (3D effect - light from top-left)
+val wallBorderLight = Border(3.px, BorderStyle.SOLID, Color.hex(0x888888))
+val wallBorderDark = Border(3.px, BorderStyle.SOLID, Color.hex(0x2a2a2a))
+val mazeBorder = Border(2.px, BorderStyle.SOLID, Color.hex(0x404040))
 
 fun Container.mazePanel(maze: MazeDto) {
 
@@ -32,18 +37,18 @@ fun Container.mazePanel(maze: MazeDto) {
         gridAutoRows = "1fr"
         gridTemplateColumns = "repeat(${maze.columns}, ${cellSize}px)"
 
-        border = cellBorder
+        border = mazeBorder
 
-        val pathStore = StateService.mazeState.sub { it.solutionPath }
+        // Create cells ONCE without bind - don't recreate on path updates
+        for (cell in maze.grid) {
 
-        bind(pathStore) { path ->
+            options(rowStart = cell.row + 1, columnStart = cell.column + 1) {
 
-            for (cell in maze.grid) {
+                cell(cell) {
 
-                options(rowStart = cell.row + 1, columnStart = cell.column + 1) {
-
-                    cell(cell) {
-
+                    // Bind only the path content, not the entire cell
+                    val pathStore = StateService.mazeState.sub { it.solutionPath }
+                    bind(pathStore) { path ->
                         when (val point = cell.toPoint2D()) {
                             maze.start -> setStartCell()
                             maze.goal -> setGoalCell()
@@ -102,8 +107,19 @@ private fun Div.setGoalCell() {
         centered = true,
         className = "p-2"
     ){
-        addCssStyle(Style { cursor = Cursor.POINTER })
-    }.setDragDropData("text/plain", "goal")
+        addCssStyle(Style {
+            cursor = Cursor.POINTER
+            color = Color.hex(0xEF4444) // Red target icon
+        })
+        draggable = true
+    }.apply {
+        setDragDropData("text/plain", "goal")
+        getElement()?.addEventListener("dragstart", { e: Event ->
+            val dragEvent = e as DragEvent
+            dragEvent.dataTransfer?.effectAllowed = "move"
+            dragEvent.dataTransfer?.setData("text/plain", "goal")
+        })
+    }
 }
 
 private fun Div.setStartCell() {
@@ -113,8 +129,19 @@ private fun Div.setStartCell() {
         centered = true,
         className = "p-2"
     ) {
-        addCssStyle(Style { cursor = Cursor.POINTER })
-    }.setDragDropData("text/plain", "start")
+        addCssStyle(Style {
+            cursor = Cursor.POINTER
+            color = Color.hex(0x22C55E) // Green play-circle icon
+        })
+        draggable = true
+    }.apply {
+        setDragDropData("text/plain", "start")
+        getElement()?.addEventListener("dragstart", { e: Event ->
+            val dragEvent = e as DragEvent
+            dragEvent.dataTransfer?.effectAllowed = "move"
+            dragEvent.dataTransfer?.setData("text/plain", "start")
+        })
+    }
 }
 
 fun Container.cell(cell: CellDto, init: Div.() -> Unit) {
@@ -125,11 +152,13 @@ fun Container.cell(cell: CellDto, init: Div.() -> Unit) {
         height = cellSize.px
         width = cellSize.px
 
-        if (cell.northEdge) borderTop = cellBorder
-        if (cell.eastEdge) borderRight = cellBorder
-        if (cell.southEdge) borderBottom = cellBorder
-        if (cell.westEdge) borderLeft = cellBorder
+        // Apply wall styling
+        if (cell.northEdge) borderTop = wallBorderLight
+        if (cell.westEdge) borderLeft = wallBorderLight
+        if (cell.southEdge) borderBottom = wallBorderDark
+        if (cell.eastEdge) borderRight = wallBorderDark
 
+        // Render the cell content
         when {
             cell.isClosed() -> {
                 background = Background(Color.hex(0xEFEFEF))
@@ -139,13 +168,37 @@ fun Container.cell(cell: CellDto, init: Div.() -> Unit) {
             }
         }
 
-        setDropTargetData("text/plain") { data ->
-            val state = StateService.mazeState.getState()
-            val cellPoint = cell.toPoint2D()
-            if (data == "start" && state.maze?.start != cellPoint) {
-                AppService.Request.updateMaze(start = cellPoint, goal = state.maze?.goal)
-            } else if (data == "goal" && state.maze?.goal != cellPoint) {
-                AppService.Request.updateMaze(goal = cellPoint, start = state.maze?.start)
+        // Set up drag and drop handlers - everything in one setEventListener
+        setEventListener<Div> {
+            dragenter = { e ->
+                e.preventDefault()
+                self.getElement()?.classList?.add("dragover-target")
+                false
+            }
+            dragover = { e ->
+                e.preventDefault()
+                e.dataTransfer?.dropEffect = "move"
+                self.getElement()?.classList?.add("dragover-target")
+                false
+            }
+            dragleave = { e ->
+                self.getElement()?.classList?.remove("dragover-target")
+                false
+            }
+            drop = { e ->
+                e.preventDefault()
+                e.stopPropagation()
+                self.getElement()?.classList?.remove("dragover-target")
+
+                val data = e.dataTransfer?.getData("text/plain")
+                val state = StateService.mazeState.getState()
+                val cellPoint = cell.toPoint2D()
+                if (data == "start" && state.maze?.start != cellPoint) {
+                    AppService.Request.updateMaze(start = cellPoint, goal = state.maze?.goal)
+                } else if (data == "goal" && state.maze?.goal != cellPoint) {
+                    AppService.Request.updateMaze(goal = cellPoint, start = state.maze?.start)
+                }
+                false
             }
         }
     }

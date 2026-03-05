@@ -2,6 +2,7 @@ package de.ihmels.ui
 
 import de.ihmels.AppService
 import de.ihmels.StateService
+import de.ihmels.ui.settings.GeneratorForm
 import io.kvision.form.check.checkBox
 import io.kvision.form.formPanel
 import io.kvision.form.number.Spinner
